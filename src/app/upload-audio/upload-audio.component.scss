@@ -1,0 +1,80 @@
+:host {
+  display: block;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  border: 1px solid #E0D8D0;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  &.dragover {
+    border-color: #6F4E37;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+
+  &:hover {
+    border-color: #5A3F2E;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  color: #A5A5A5;
+}
+
+.upload-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  color: #6F4E37;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: #3B2F2F;
+}
+
+span {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #A5A5A5;
+}
+
+.browse-btn {
+  background-color: transparent;
+  color: #6F4E37;
+  border: 1px solid #6F4E37;
+  padding: 0.6rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #6F4E37;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+  }
+}
+
+.hint-text {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #A5A5A5;
+}

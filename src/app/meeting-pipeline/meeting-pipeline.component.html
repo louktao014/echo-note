@@ -1,0 +1,22 @@
+@if (step() === 'UPLOAD') {
+  <app-upload-audio (audioUploaded)="onUpload($event)"></app-upload-audio>
+} @else if (step() === 'TRANSCRIBE') {
+  <p>กำลังถอดเสียง (Speech-to-Text)...</p>
+} @else if (step() === 'TRANSCRIPT') {
+  <app-transcript
+    [transcript]="transcript()"
+    (confirm)="onConfirmTranscript($event)"
+  ></app-transcript>
+} @else if (step() === 'GENERATING') {
+  <p>กำลังสร้างรายงานการประชุม (Generate MoM)...</p>
+} @else if (step() === 'DONE') {
+<app-mom-result [mom]="mom()"></app-mom-result>
+}
+
+<!-- <app-upload-audio (audioUploaded)="onUpload($event)"></app-upload-audio>
+<app-transcript
+[transcript]="transcript()"
+(confirm)="onConfirmTranscript($event)"
+></app-transcript>
+<app-mom-result [mom]="mom()"></app-mom-result> -->
+

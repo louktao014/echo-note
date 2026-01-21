@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+.header {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px var(--shadow-color);
+
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+}
+
+.main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
