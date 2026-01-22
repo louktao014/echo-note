@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal, output } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, signal, output, inject } from '@angular/core';
 
 @Component({
   selector: 'app-upload-audio',
   templateUrl: './upload-audio.component.html',
   styleUrls: ['./upload-audio.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadAudioComponent {
   public audioUploaded = output<File>();
@@ -42,7 +43,6 @@ export class UploadAudioComponent {
     if (file.type.startsWith('audio/')) {
       this.audioUploaded.emit(file);
     } else {
-      // Here you could add some user feedback that the file type is not supported
       console.warn('Unsupported file type:', file.type);
     }
   }
