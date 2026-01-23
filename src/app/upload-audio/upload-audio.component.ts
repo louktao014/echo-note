@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, signal, output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, output } from '@angular/core';
 
 @Component({
   selector: 'app-upload-audio',
@@ -11,6 +10,8 @@ export class UploadAudioComponent {
   public audioUploaded = output<File>();
 
   public isDragOver = signal(false);
+  public selectedFile = signal<File | null>(null);
+  public audioUrl = signal<string | null>(null);
 
   public onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -39,11 +40,33 @@ export class UploadAudioComponent {
     }
   }
 
+  public confirmUpload(): void {
+    const file = this.selectedFile();
+    if (file) {
+      this.audioUploaded.emit(file);
+      this.resetState();
+    }
+  }
+
+  public cancelUpload(): void {
+    this.resetState();
+  }
+
   private handleFile(file: File): void {
     if (file.type.startsWith('audio/')) {
-      this.audioUploaded.emit(file);
+      this.selectedFile.set(file);
+      this.audioUrl.set(URL.createObjectURL(file));
     } else {
       console.warn('Unsupported file type:', file.type);
     }
+  }
+
+  private resetState(): void {
+    const url = this.audioUrl();
+    if (url) {
+      URL.revokeObjectURL(url);
+    }
+    this.selectedFile.set(null);
+    this.audioUrl.set(null);
   }
 }

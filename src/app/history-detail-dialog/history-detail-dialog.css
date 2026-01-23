@@ -1,0 +1,14 @@
+h2 {
+  font-weight: bold;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+small {
+  color: #666;
+  font-style: italic;
+}

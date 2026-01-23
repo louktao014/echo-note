@@ -1,18 +1,21 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-mom-result',
   templateUrl: './mom-result.component.html',
   styleUrls: ['./mom-result.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
 })
 export class MomResultComponent {
-  mom = input<{
-    summary: string[];
-    resolutions: string[];
-    actionItems: any[];
-    others: string[];
-  }>();
+  momContent = signal<string>('');
+  mom = input('');
+
+  saveTranscript() {
+    const blob = new Blob([this.mom()], { type: 'text/plain' });
+    console.log('saveTranscript', blob);
+  }
+
+  onCopyToClipboard() {
+    navigator.clipboard.writeText(this.mom());
+  }
 }

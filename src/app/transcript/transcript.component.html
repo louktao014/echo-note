@@ -1,9 +1,22 @@
 <div class="transcript-container">
-  <h2 class="title">Review Transcript</h2>
+  <h2>Transcript</h2>
+
+  @if (isEditing()) {
+  <textarea class="transcript-textarea" [(ngModel)]="editedTranscript"></textarea>
+  } @else {
   <div class="transcript-content">
     <p>{{ transcript() }}</p>
   </div>
+  }
+
   <div class="actions">
-    <button class="confirm-btn" (click)="proceed()">Confirm & Generate MoM</button>
+    <div class="btn-edit" (click)="toggleEditSave()">
+      @if (isEditing()) {
+      <span>Save</span>
+      } @else {
+      <span>Edit</span>
+      }
+    </div>
+    <div class="btn-confirm" (click)="proceed()">Confirm & Proceed</div>
   </div>
 </div>

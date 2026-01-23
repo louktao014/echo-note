@@ -1,25 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600&family=Prompt:wght@400;500;600&display=swap');
-// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
 :root {
-  --primary-color: #6F4E37; /* Coffee Brown */
-  --primary-color-hover: #5A3F2E; /* Darker Coffee */
-  --secondary-color: #D2B48C; /* Tan */
-  --background-color: #F5F5DC; /* Beige */
-  --card-background: #FFFFFF;
-  --text-color: #3B2F2F; /* Dark Brown */
-  --text-color-light: #A5A5A5;
-  --border-color: #E0D8D0;
+  --primary-color: #6f4e37; /* Coffee Brown */
+  --primary-color-hover: #5a3f2e; /* Darker Coffee */
+  --secondary-color: #d2b48c; /* Tan */
+  --background-color: #f5f5dc; /* Beige */
+  --card-background: #ffffff;
+  --text-color: #3b2f2f; /* Dark Brown */
+  --text-color-light: #a5a5a5;
+  --border-color: #e0d8d0;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --warning-color: #e57373;
-    --font-primary: 'LINE Seed Sans TH', 'Anuphan', system-ui, sans-serif;
-    --font-heading: 'Prompt', 'Anuphan', sans-serif;
-  
+  --font-body: 'Patrick Hand', 'Inter', sans-serif;
 }
 
 body {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   background-color: var(--background-color);
   color: var(--text-color);
   margin: 0;

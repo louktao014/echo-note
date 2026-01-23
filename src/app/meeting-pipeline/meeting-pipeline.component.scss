@@ -4,6 +4,26 @@
   gap: 2rem;
 }
 
+.tab-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  .btn-audio,
+  .btn-transcript {
+    border: 1px solid #5a3f2e;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-audio:hover,
+  .btn-transcript:hover {
+    background-color: #5a3f2e;
+    color: #f5f5dc;
+  }
+}
+
 app-upload-audio,
 app-transcript,
 app-mom-result {
@@ -16,5 +36,40 @@ app-mom-result {
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px var(--shadow-color);
+  }
+}
+
+p {
+  background-color: #f5f5dc; // Coffee Brown
+  color: #6f4e37; // Beige/Cream color for text
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid #5a3f2e; // Walnut Brown
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease-in-out;
+  cursor: default;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  // Style for the 'FINISH' button
+  &[style*='cursor: pointer'] {
+    cursor: pointer;
+    background-color: #f5f5dc; // Beige/Cream background
+    color: #5a3f2e; // Walnut Brown text
+    border-color: #5a3f2e;
+    font-weight: 700;
+
+    &:hover {
+      background-color: #e0e0c8;
+      border-color: #6f4e37;
+    }
   }
 }
