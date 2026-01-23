@@ -13,6 +13,8 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const gemini_service_1 = require("./gemini.service");
 const speech_service_1 = require("./speech.service");
+const supabase_module_1 = require("./supabse/supabase.module");
+const transcript_service_1 = require("./transcript.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -22,9 +24,10 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
+            supabase_module_1.SupabaseModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, gemini_service_1.GeminiService, speech_service_1.SpeechService],
+        providers: [app_service_1.AppService, gemini_service_1.GeminiService, speech_service_1.SpeechService, transcript_service_1.TranscriptService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -54,15 +54,18 @@ const multer_1 = require("multer");
 const path = __importStar(require("path"));
 const speech_service_1 = require("./speech.service");
 const gemini_service_1 = require("./gemini.service");
+const transcript_service_1 = require("./transcript.service");
 let AppController = AppController_1 = class AppController {
     appService;
     speechService;
     geminiService;
+    transcriptService;
     logger = new common_1.Logger(AppController_1.name);
-    constructor(appService, speechService, geminiService) {
+    constructor(appService, speechService, geminiService, transcriptService) {
         this.appService = appService;
         this.speechService = speechService;
         this.geminiService = geminiService;
+        this.transcriptService = transcriptService;
     }
     getHello() {
         return this.appService.getHello();
@@ -79,6 +82,18 @@ let AppController = AppController_1 = class AppController {
         const result = await this.geminiService.summarizeMeeting(transcript);
         this.logger.log('result', result);
         return result;
+    }
+    async saveTranscript(body) {
+        const transcript = body;
+        this.logger.log('saveTranscript', transcript);
+        const result = this.transcriptService.saveTranscript(transcript);
+        return result;
+    }
+    async getHistory() {
+        return this.transcriptService.getTranscripts();
+    }
+    async deleteTranscript(id) {
+        return this.transcriptService.deleteTranscript(id);
     }
     async uploadAudio(file) {
         this.logger.log(`Received file: ${file.originalname}, size: ${file.size} bytes`);
@@ -129,6 +144,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "generateMom", null);
 __decorate([
+    (0, common_1.Post)('save-transcript'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "saveTranscript", null);
+__decorate([
+    (0, common_1.Get)('get-transcript'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "getHistory", null);
+__decorate([
+    (0, common_1.Delete)('delete-transcript/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "deleteTranscript", null);
+__decorate([
     (0, common_1.Post)('upload-audio'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('audio', {
         storage: (0, multer_1.diskStorage)({
@@ -151,6 +186,7 @@ exports.AppController = AppController = AppController_1 = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService,
         speech_service_1.SpeechService,
-        gemini_service_1.GeminiService])
+        gemini_service_1.GeminiService,
+        transcript_service_1.TranscriptService])
 ], AppController);
 //# sourceMappingURL=app.controller.js.map

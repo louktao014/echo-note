@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { ITranscript } from '../model/transcript.mode';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TranscriptService {
+  constructor(private http: HttpClient) {}
+
   chunk(text: string): string[] {
     const maxLength = 3000;
     const chunks: string[] = [];
@@ -27,5 +31,16 @@ export class TranscriptService {
     }
 
     return chunks;
+  }
+
+  saveTranscript(payload: ITranscript) {
+    return this.http.post('/api/save-transcript', payload);
+  }
+
+  getAllTranscript() {
+    return this.http.get('/api/get-transcript');
+  }
+  deleteTranscript(id: string) {
+    return this.http.delete(`/api/delete-transcript/${id}`);
   }
 }

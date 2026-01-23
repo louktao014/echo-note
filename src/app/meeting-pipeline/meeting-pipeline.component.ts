@@ -69,7 +69,7 @@ export class MeetingPipelineComponent {
     this.step.set('GENERATING');
     const chunks = this.transcriptService.chunk(text);
     this.meetingService.generateMoM(chunks).subscribe((result: any) => {
-      console.log('generateMoM', result.mom);
+      console.log('generateMoM', result);
       const { mom } = result;
       this.mom.set(mom);
       this.step.set('DONE');

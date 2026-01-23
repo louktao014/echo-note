@@ -7,6 +7,8 @@ import {
   InternalServerErrorException,
   Logger,
   Body,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,6 +16,8 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { SpeechService } from './speech.service';
 import { GeminiService } from './gemini.service';
+import type { ITranscript } from './model/transcript.mode';
+import { TranscriptService } from './transcript.service';
 
 @Controller()
 export class AppController {
@@ -23,6 +27,7 @@ export class AppController {
     private readonly appService: AppService,
     private speechService: SpeechService,
     private geminiService: GeminiService,
+    private transcriptService: TranscriptService,
   ) {}
 
   @Get()
@@ -50,6 +55,22 @@ export class AppController {
     return result;
   }
 
+  @Post('save-transcript')
+  async saveTranscript(@Body() body: ITranscript) {
+    const transcript = body;
+    this.logger.log('saveTranscript', transcript);
+    const result = this.transcriptService.saveTranscript(transcript);
+    return result;
+  }
+
+  @Get('get-transcript')
+  async getHistory() {
+    return this.transcriptService.getTranscripts();
+  }
+  @Delete('delete-transcript/:id')
+  async deleteTranscript(@Param('id') id: string) {
+    return this.transcriptService.deleteTranscript(id);
+  }
   @Post('upload-audio')
   @UseInterceptors(
     FileInterceptor('audio', {

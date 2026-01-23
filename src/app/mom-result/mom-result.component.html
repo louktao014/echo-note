@@ -8,7 +8,16 @@
     </div>
   </div>
   <div class="btn-container">
+    <div class="input-subject">
+      <input
+        type="text"
+        id="subject-input"
+        placeholder="Enter a subject for this meeting..."
+        class="subject-input"
+        #subjectInput
+      />
+    </div>
     <div class="btn-copy" (click)="onCopyToClipboard()">COPY</div>
-    <div class="btn-copy" (click)="saveTranscript()">SAVE</div>
+    <div class="btn-copy" (click)="saveTranscript(subjectInput.value)">SAVE</div>
   </div>
 </div>
