@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { HistoryService } from '../services/history.service';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { HistoryDetailDialogComponent } from '../history-detail-dialog/history-detail-dialog';
 import { TranscriptService } from '../services/transcript.service';
 import { ITranscript } from '../model/transcript.mode';
-import { EMPTY, switchMap } from 'rxjs';
+import { EMPTY, of, switchMap } from 'rxjs';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-history',
@@ -15,7 +15,6 @@ import { EMPTY, switchMap } from 'rxjs';
   imports: [CommonModule],
 })
 export class HistoryComponent implements OnInit {
-  private historyService = inject(HistoryService);
   private transcriptService = inject(TranscriptService);
   private dialog = inject(MatDialog);
   history = signal<ITranscript[]>([]);
@@ -29,6 +28,7 @@ export class HistoryComponent implements OnInit {
       next: (result: any) => {
         console.log('result', result);
         this.history.set(result.data);
+        console.log('history', this.history());
       },
       error: (error) => {
         console.warn('error', error);
@@ -37,29 +37,40 @@ export class HistoryComponent implements OnInit {
   }
 
   removeItem(item: ITranscript) {
-    console.log('removeItem', item);
-    if (item.id) {
-      this.transcriptService
-        .deleteTranscript(item.id)
-        .pipe(
-          switchMap((response: any) => {
-            if (!response.error) {
-              return this.transcriptService.getAllTranscript();
-            } else {
-              return EMPTY;
-            }
-          })
-        )
-        .subscribe({
-          next: (response: any) => {
-            console.log('delete success');
-            this.history.set(response.data);
-          },
-          error: (error) => {
-            console.warn('error', error);
-          },
-        });
-    }
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: '500px',
+      })
+      .afterClosed()
+      .pipe(
+        switchMap((isConfirm: boolean) => {
+          if (item?.id && isConfirm) {
+            const { id: transcriptID } = item;
+            return this.deleteTranscript(transcriptID);
+          }
+          return EMPTY;
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          console.log('delete success', response);
+        },
+        error: (error) => {
+          console.warn('error', error);
+        },
+      });
+    return;
+  }
+
+  deleteTranscript(transcriptID: string) {
+    return this.transcriptService.deleteTranscript(transcriptID).pipe(
+      switchMap((response: any) => {
+        if (!response?.error) {
+          this.history.update((items) => items.filter((item) => item.id !== transcriptID));
+        }
+        return of(response);
+      })
+    );
   }
 
   openDialog(item: ITranscript): void {

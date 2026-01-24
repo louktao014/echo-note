@@ -3,11 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { StatusDialogComponent } from '../dialog/status-dialog.component';
 
 @Component({
   selector: 'app-transcript',
@@ -17,6 +20,7 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
 })
 export class TranscriptComponent {
+  private dialog = inject(MatDialog);
   transcript = input<string>('');
   confirm = output<string>();
 
@@ -31,7 +35,18 @@ export class TranscriptComponent {
 
   toggleEditSave() {
     this.isEditing.update((editing) => !editing);
-    // When saving, the value is already updated in editedTranscript via ngModel
+    if (!this.isEditing()) {
+      this.openStatusDialog('success');
+    }
+  }
+  openStatusDialog(status: string) {
+    const isSuccess = status === 'success';
+    const dialogData = {
+      title: 'Status',
+      message: isSuccess ? 'Done' : 'Something went wrong',
+      status: isSuccess ? 'success' : 'error',
+    };
+    this.dialog.open(StatusDialogComponent, { width: '500px', data: dialogData });
   }
 
   proceed() {

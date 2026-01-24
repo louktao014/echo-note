@@ -15,12 +15,13 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
   --warning-color: #e57373;
   --font-body: 'Patrick Hand', 'Inter', sans-serif;
+  --font-caveat: 'Caveat', cursive;
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-caveat);
   background-color: var(--background-color);
-  color: var(--text-color);
+  color: #eaeabe; //var(--text-color);
   margin: 0;
   padding: 0;
 }

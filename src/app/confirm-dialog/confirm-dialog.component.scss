@@ -1,0 +1,46 @@
+.notebook-paper {
+  background-color: #fdfaef;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: relative;
+  // font-family: 'Courier New', Courier, monospace;
+  font-family: 'Caveat', cursive;
+}
+
+.notebook-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 2px;
+  height: 100%;
+  background-color: #e6c3c3;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ccc;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+}
+
+[mat-dialog-actions] {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+button {
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  text-transform: uppercase;
+  border-radius: 0;
+}

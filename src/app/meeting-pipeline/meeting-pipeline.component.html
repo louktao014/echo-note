@@ -1,36 +1,36 @@
 <div class="tab-container">
-  <div class="btn-audio" (click)="step.set('UPLOAD')">UPLOAD</div>
-  <div class="btn-transcript" (click)="step.set('TRANSCRIPT')">TRANSCRIPT</div>
-  <div class="btn-transcript" (click)="step.set('HISTORY')">HISTORY</div>
+  <div class="btn-audio" (click)="step.set(EnumStep.UPLOAD)">UPLOAD</div>
+  <div class="btn-transcript" (click)="step.set(EnumStep.TRANSCRIPT)">TRANSCRIPT</div>
+  <div class="btn-transcript" (click)="step.set(EnumStep.HISTORY)">HISTORY</div>
 </div>
-@switch (step()) { @case ('UPLOAD') {
+@switch (step()) { @case (EnumStep.UPLOAD) {
 <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-} @case ('LOADING') {
-<p>Loading........</p>
-} @case ('TRANSCRIBE') {
-<p>กำลังถอดเสียง (Speech-to-Text)...</p>
-} @case ('TRANSCRIPT') {
+} @case (EnumStep.LOADING) {
+<p>Loading....</p>
+} @case (EnumStep.TRANSCRIBE) {
+<p>Generate Speech To Text...</p>
+} @case (EnumStep.TRANSCRIPT) {
 <app-transcript [transcript]="transcript()" (confirm)="onConfirmTranscript($event)">
 </app-transcript>
-} @case ('GENERATING') {
-<p>กำลังสร้างรายงานการประชุม (Generate MoM)...</p>
-} @case ('DONE') {
+} @case (EnumStep.GENERATING) {
+<p>Generate Munites Of Meeting...</p>
+} @case (EnumStep.DONE) {
 <app-mom-result [mom]="mom()"> </app-mom-result>
-} @case ('FINISH') {
-<p (click)="step.set('UPLOAD')" style="cursor: pointer">FINISH.</p>
-} @case('HISTORY'){
+} @case (EnumStep.FINISH) {
+<p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
+} @case(EnumStep.HISTORY){
 <app-history></app-history>
 } @case ('ALL') {
 <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-<p>Loading........</p>
-<p>กำลังถอดเสียง (Speech-to-Text)...</p>
+<p>Loading....</p>
+<p>Generate Speech To Text...</p>
 <app-transcript
   [transcript]="transcript()"
   (confirm)="onConfirmTranscript($event)"
 ></app-transcript>
-<p>กำลังสร้างรายงานการประชุม (Generate MoM)...</p>
+<p>Generate Munites Of Meeting...</p>
 <app-mom-result [mom]="mom()"> </app-mom-result>
-<p (click)="step.set('UPLOAD')" style="cursor: pointer">FINISH.</p>
+<p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
 } @default {
 <p>Unknown step</p>
 } }

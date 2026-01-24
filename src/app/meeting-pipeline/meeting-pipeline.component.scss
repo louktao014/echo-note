@@ -16,6 +16,7 @@
     padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
+    font-family: 'Caveat', cursive;
   }
   .btn-audio:hover,
   .btn-transcript:hover {
@@ -49,7 +50,7 @@ p {
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
-  font-family: var(--font-heading);
+  font-family: 'Caveat', cursive;
   letter-spacing: 0.5px;
   transition: all 0.3s ease-in-out;
   cursor: default;
@@ -66,7 +67,7 @@ p {
     color: #5a3f2e; // Walnut Brown text
     border-color: #5a3f2e;
     font-weight: 700;
-
+    font-family: 'Caveat', cursive;
     &:hover {
       background-color: #e0e0c8;
       border-color: #6f4e37;
