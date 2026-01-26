@@ -6,6 +6,8 @@
   font-family: 'Caveat', cursive;
   position: relative;
   width: auto;
+  text-wrap: auto;
+  padding: 10px;
   .lines {
     display: flex;
     flex-direction: column;

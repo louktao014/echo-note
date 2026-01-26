@@ -4,6 +4,7 @@ import {
   EventEmitter,
   inject,
   input,
+  Output,
   output,
   signal,
 } from '@angular/core';
@@ -12,7 +13,6 @@ import { TranscriptService } from '../services/transcript.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { EMPTY, switchMap } from 'rxjs';
-import { E } from '@angular/cdk/keycodes';
 import { EnumStep } from '../model/meeting-pipeline.model';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
 
@@ -28,7 +28,7 @@ export class MomResultComponent {
 
   momContent = signal<string>('');
   mom = input('');
-  setStep = new EventEmitter<EnumStep>();
+  @Output() setStep = new EventEmitter<EnumStep>();
 
   onSave(subJect: string) {
     this.dialog
@@ -63,10 +63,15 @@ export class MomResultComponent {
       message: isSuccess ? 'Save Transcript Complete' : 'Something Went Wrong',
       status: isSuccess ? 'success' : 'error',
     };
-    this.dialog.open(StatusDialogComponent, {
-      width: '500px',
-      data: dialogData,
-    });
+    this.dialog
+      .open(StatusDialogComponent, {
+        width: '500px',
+        data: dialogData,
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this.setStep.emit(EnumStep.HISTORY);
+      });
   }
 
   preparingPayloadTranscript(subJect: string) {

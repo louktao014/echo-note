@@ -16,7 +16,7 @@
 } @case (EnumStep.GENERATING) {
 <p>Generate Munites Of Meeting...</p>
 } @case (EnumStep.DONE) {
-<app-mom-result [mom]="mom()"> </app-mom-result>
+<app-mom-result [mom]="mom()" (setStep)="step.set($event)"> </app-mom-result>
 } @case (EnumStep.FINISH) {
 <p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
 } @case(EnumStep.HISTORY){
