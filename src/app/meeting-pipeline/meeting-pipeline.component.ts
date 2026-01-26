@@ -58,11 +58,11 @@ export class MeetingPipelineComponent {
   openStatusDialog(status: string) {
     const isSuccess = status === 'success';
     const dialogData = {
-      title: 'Status',
+      title: isSuccess ? 'Success' : 'Error',
       message: isSuccess ? 'Done' : 'Something went wrong',
       status: isSuccess ? 'success' : 'error',
     };
-    this.dialog.open(StatusDialogComponent, { width: '500px', data: dialogData });
+    this.dialog.open(StatusDialogComponent, { width: '400px', data: dialogData });
   }
 
   downloadFile(filePath: string) {

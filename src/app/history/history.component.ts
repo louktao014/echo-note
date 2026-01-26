@@ -6,6 +6,7 @@ import { TranscriptService } from '../services/transcript.service';
 import { ITranscript } from '../model/transcript.mode';
 import { EMPTY, of, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { StatusDialogComponent } from '../dialog/status-dialog.component';
 
 @Component({
   selector: 'app-history',
@@ -49,6 +50,12 @@ export class HistoryComponent implements OnInit {
             return this.deleteTranscript(transcriptID);
           }
           return EMPTY;
+        }),
+        switchMap((response: any) => {
+          let statusDialog = 'success';
+          if (response?.error) statusDialog = 'error';
+          this.openDialogStatus(statusDialog, item);
+          return of(response);
         })
       )
       .subscribe({
@@ -60,6 +67,16 @@ export class HistoryComponent implements OnInit {
         },
       });
     return;
+  }
+
+  openDialogStatus(status: string, item: ITranscript) {
+    const dialogData = {
+      title: status === 'success' ? 'Success' : 'Error',
+      message:
+        status === 'success' ? `Delete '${item.sub_ject}' successfully` : 'Something went wrong',
+      status: status,
+    };
+    this.dialog.open(StatusDialogComponent, { width: '400px', data: dialogData });
   }
 
   deleteTranscript(transcriptID: string) {

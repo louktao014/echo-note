@@ -2,6 +2,7 @@
   <div class="btn-audio" (click)="step.set(EnumStep.UPLOAD)">UPLOAD</div>
   <div class="btn-transcript" (click)="step.set(EnumStep.TRANSCRIPT)">TRANSCRIPT</div>
   <div class="btn-transcript" (click)="step.set(EnumStep.HISTORY)">HISTORY</div>
+  <div class="btn-transcript" (click)="openStatusDialog('error')">DIALOG</div>
 </div>
 @switch (step()) { @case (EnumStep.UPLOAD) {
 <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
