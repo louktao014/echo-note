@@ -1,12 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { HistoryDetailDialogComponent } from '../history-detail-dialog/history-detail-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { HistoryDetailDialogComponent } from '../history-detail-dialog/history-detail-dialog.component';
 import { TranscriptService } from '../services/transcript.service';
 import { ITranscript } from '../model/transcript.mode';
 import { EMPTY, of, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
+import {
+  EnumLoadingStyle,
+  LoadingDialogComponent,
+  LoadingDialogData,
+} from '../loading-dialog/loading-dialog.component';
 
 @Component({
   selector: 'app-history',
@@ -19,20 +24,23 @@ export class HistoryComponent implements OnInit {
   private transcriptService = inject(TranscriptService);
   private dialog = inject(MatDialog);
   history = signal<ITranscript[]>([]);
+  private loadingDialogRef?: MatDialogRef<LoadingDialogComponent>;
 
   ngOnInit(): void {
     this.getAllTranscripts();
   }
 
   getAllTranscripts() {
+    this.onLoading(true);
     this.transcriptService.getAllTranscript().subscribe({
       next: (result: any) => {
-        console.log('result', result);
         this.history.set(result.data);
         console.log('history', this.history());
+        this.onLoading(false);
       },
       error: (error) => {
         console.warn('error', error);
+        this.onLoading(false);
       },
     });
   }
@@ -46,6 +54,7 @@ export class HistoryComponent implements OnInit {
       .pipe(
         switchMap((isConfirm: boolean) => {
           if (item?.id && isConfirm) {
+            this.onLoading(true);
             const { id: transcriptID } = item;
             return this.deleteTranscript(transcriptID);
           }
@@ -53,7 +62,10 @@ export class HistoryComponent implements OnInit {
         }),
         switchMap((response: any) => {
           let statusDialog = 'success';
-          if (response?.error) statusDialog = 'error';
+          if (response?.error) {
+            this.onLoading(false);
+            statusDialog = 'error';
+          }
           this.openDialogStatus(statusDialog, item);
           return of(response);
         })
@@ -61,12 +73,31 @@ export class HistoryComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           console.log('delete success', response);
+          this.onLoading(false);
         },
         error: (error) => {
           console.warn('error', error);
+          this.onLoading(false);
         },
       });
-    return;
+  }
+
+  onLoading(isLoading: boolean) {
+    if (isLoading) {
+      this.loadingDialogRef = this.dialog.open(LoadingDialogComponent, {
+        width: '200px',
+        height: '200px',
+        data: {
+          style: EnumLoadingStyle.SPRING,
+          message: 'Delete Transcript',
+          config: { isClosable: true },
+        } as LoadingDialogData,
+        disableClose: true,
+      });
+    } else {
+      this.loadingDialogRef?.close();
+      this.loadingDialogRef = undefined;
+    }
   }
 
   openDialogStatus(status: string, item: ITranscript) {
@@ -76,7 +107,10 @@ export class HistoryComponent implements OnInit {
         status === 'success' ? `Delete '${item.sub_ject}' successfully` : 'Something went wrong',
       status: status,
     };
-    this.dialog.open(StatusDialogComponent, { width: '400px', data: dialogData });
+    this.dialog
+      .open(StatusDialogComponent, { width: '400px', data: dialogData })
+      .afterClosed()
+      .subscribe(() => this.onLoading(false));
   }
 
   deleteTranscript(transcriptID: string) {
@@ -92,7 +126,7 @@ export class HistoryComponent implements OnInit {
 
   openDialog(item: ITranscript): void {
     const dialogData = {
-      title: `Transcription from ${new Date().toLocaleDateString()}`,
+      title: `${item.sub_ject}, Date :${new Date().toLocaleDateString()}`,
       content: item.content,
       date: new Date(),
     };

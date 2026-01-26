@@ -1,0 +1,23 @@
+<div mat-dialog-content class="loading-container">
+  @if(data.message){
+  <div class="message">{{ data.message }}</div>
+  } @switch (data.style) { @case (EnumLoadingStyle.SPRING) {
+  <div class="dot-spinner">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  } @case (EnumLoadingStyle.SPINNER) {
+  <div class="ring-spinner"></div>
+  } @default {
+  <div class="dot-spinner">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  } } @if(data.config?.isClosable){
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">CLOSE</button>
+  </mat-dialog-actions>
+  }
+</div>

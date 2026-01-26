@@ -31,10 +31,13 @@ body {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
+  background-color: #f6f1ea;
 
   // Reset the user agent margin.
-  margin: 0;
+  margin: 10px;
   height: 100%;
+  // Font style
+  font-family: 'Caveat', cursive;
 }
 :host {
   display: block;

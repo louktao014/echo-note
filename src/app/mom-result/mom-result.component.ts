@@ -5,16 +5,20 @@ import {
   inject,
   input,
   Output,
-  output,
   signal,
 } from '@angular/core';
 import { ITranscript } from '../model/transcript.mode';
 import { TranscriptService } from '../services/transcript.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { EMPTY, switchMap } from 'rxjs';
 import { EnumStep } from '../model/meeting-pipeline.model';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
+import {
+  EnumLoadingStyle,
+  LoadingDialogComponent,
+  LoadingDialogData,
+} from '../loading-dialog/loading-dialog.component';
 
 @Component({
   selector: 'app-mom-result',
@@ -23,8 +27,9 @@ import { StatusDialogComponent } from '../dialog/status-dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MomResultComponent {
-  transcriptService = inject(TranscriptService);
   private dialog = inject(MatDialog);
+  private loadingDialogRef?: MatDialogRef<LoadingDialogComponent>;
+  transcriptService = inject(TranscriptService);
 
   momContent = signal<string>('');
   mom = input('');
@@ -39,6 +44,7 @@ export class MomResultComponent {
       .pipe(
         switchMap((isConfirm: boolean) => {
           if (isConfirm) {
+            this.onLoading(true);
             const payload = this.preparingPayloadTranscript(subJect);
             return this.transcriptService.saveTranscript(payload);
           }
@@ -48,13 +54,45 @@ export class MomResultComponent {
       .subscribe({
         next: () => {
           console.log('save transcript success');
-          this.openStatusDialog(true);
+          this.onLoading(false);
         },
         error: (err) => {
           console.warn('save transcript error', err);
           this.openStatusDialog(false);
+          this.onLoading(false);
         },
       });
+  }
+
+  onLoading(isLoading: boolean) {
+    if (isLoading) {
+      this.loadingDialogRef = this.openDialogLoading();
+      this.loadingDialogRef.afterClosed().subscribe({
+        next: () => {
+          this.openStatusDialog(true);
+        },
+        error: () => {
+          this.openStatusDialog(false);
+        },
+      });
+    } else {
+      this.loadingDialogRef?.close();
+      this.loadingDialogRef = undefined;
+    }
+  }
+
+  openDialogLoading() {
+    const dataDialog = {
+      width: '200px',
+      height: '200px',
+      data: {
+        style: EnumLoadingStyle.SPRING,
+        message: 'Saving Transcript',
+        config: { isClosable: true },
+      } as LoadingDialogData,
+      disableClose: true,
+    };
+    return this.dialog.open(LoadingDialogComponent, dataDialog);
   }
 
   openStatusDialog(isSuccess: boolean) {

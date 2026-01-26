@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
 export interface HistoryDetailData {
@@ -14,8 +10,8 @@ export interface HistoryDetailData {
 
 @Component({
   selector: 'app-history-detail-dialog',
-  templateUrl: './history-detail-dialog.html',
-  styleUrls: ['./history-detail-dialog.css'],
+  templateUrl: './history-detail-dialog.component.html',
+  styleUrls: ['./history-detail-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatDialogModule],
 })
@@ -25,5 +21,8 @@ export class HistoryDetailDialogComponent {
 
   closeDialog(): void {
     this.dialogRef.close();
+  }
+  onCopyToClipboard() {
+    navigator.clipboard.writeText(this.data.content);
   }
 }

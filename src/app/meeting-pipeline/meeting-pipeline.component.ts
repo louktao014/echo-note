@@ -8,8 +8,13 @@ import { MomResultComponent } from '../mom-result/mom-result.component';
 import { UploadAudioComponent } from '../upload-audio/upload-audio.component';
 import { HistoryComponent } from '../history/history.component';
 import { EnumStep } from '../model/meeting-pipeline.model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
+import {
+  EnumLoadingStyle,
+  LoadingDialogComponent,
+  LoadingDialogData,
+} from '../loading-dialog/loading-dialog.component';
 
 @Component({
   selector: 'app-meeting-pipeline',
@@ -34,9 +39,11 @@ export class MeetingPipelineComponent {
   private transcriptService = inject(TranscriptService);
   private meetingService = inject(MeetingService);
   private dialog = inject(MatDialog);
+  private loadingDialogRef?: MatDialogRef<LoadingDialogComponent>;
 
   onUpload(file: File) {
-    this.step.set(EnumStep.LOADING);
+    // this.step.set(EnumStep.LOADING);
+    this.onLoading(true);
     this.audioService.speechToText(file).subscribe({
       next: (response: any) => {
         this.step.set(EnumStep.TRANSCRIPT);
@@ -47,9 +54,11 @@ export class MeetingPipelineComponent {
           this.step.set(EnumStep.UPLOAD);
           console.warn('response.text is undefined');
         }
+        this.onLoading(false);
       },
       error: (error) => {
         this.step.set(EnumStep.UPLOAD);
+        this.onLoading(false);
         console.warn('error', error);
       },
     });
@@ -62,7 +71,25 @@ export class MeetingPipelineComponent {
       message: isSuccess ? 'Done' : 'Something went wrong',
       status: isSuccess ? 'success' : 'error',
     };
-    this.dialog.open(StatusDialogComponent, { width: '400px', data: dialogData });
+    return this.dialog.open(StatusDialogComponent, { width: '400px', data: dialogData });
+  }
+
+  onLoading(isLoading: boolean) {
+    if (isLoading) {
+      this.loadingDialogRef = this.dialog.open(LoadingDialogComponent, {
+        width: '200px',
+        height: '200px',
+        data: {
+          style: EnumLoadingStyle.SPRING,
+          message: 'Generating',
+          config: { isClosable: true },
+        } as LoadingDialogData,
+        disableClose: true,
+      });
+    } else {
+      this.loadingDialogRef?.close();
+      this.loadingDialogRef = undefined;
+    }
   }
 
   downloadFile(filePath: string) {
@@ -71,9 +98,11 @@ export class MeetingPipelineComponent {
   }
 
   onConfirmTranscript(text: string) {
-    this.step.set(EnumStep.GENERATING);
+    this.onLoading(true);
+    // this.step.set(EnumStep.GENERATING);
     const chunks = this.transcriptService.chunk(text);
     this.meetingService.generateMoM(chunks).subscribe((result: any) => {
+      this.onLoading(false);
       console.log('generateMoM', result);
       const { mom } = result;
       this.mom.set(mom);

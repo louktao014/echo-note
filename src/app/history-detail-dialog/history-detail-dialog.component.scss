@@ -1,0 +1,40 @@
+h2 {
+  font-weight: bold;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+small {
+  color: #666;
+  font-style: italic;
+}
+
+.history-btn-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  mat-dialog-actions {
+    button {
+      font-family: 'Caveat', cursive;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+      background-color: transparent;
+      border: 2px solid #2c3e50;
+      border-radius: 20px;
+      padding: 8px 24px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #2c3e50;
+        color: #fdfaf2;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
