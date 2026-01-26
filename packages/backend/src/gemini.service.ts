@@ -48,47 +48,54 @@ export class GeminiService {
   /**
    * สรุปรายงานการประชุม (Minutes of Meeting)
    */
-  async summarizeMeeting(transcript: string): Promise<{ mom: string }> {
+  async summarizeMeeting(
+    transcript: string,
+    isTest: boolean = true,
+  ): Promise<{ mom: string }> {
     this.logger.log('Summarizing meeting transcript with Gemini');
     try {
-      const model = this.genAI.getGenerativeModel({
-        model: 'gemini-2.5-flash',
-      });
+      if (isTest) {
+        return MOCK_RES_GERMINI;
+      } else {
+        const model = this.genAI.getGenerativeModel({
+          model: 'gemini-2.5-flash',
+        });
 
-      const prompt = `
-        คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
+        const prompt = `
+          คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
+  
+          กรุณาสรุปเนื้อหาจากบทถอดเสียงด้านล่าง
+          โดยจัดรูปแบบดังนี้:
+  
+          1. สรุปเนื้อหาสำคัญ
+          2. มติที่ประชุม
+          3. สิ่งที่ต้องดำเนินการต่อ (Action Items)
+          - งาน | ผู้รับผิดชอบ | Deadline
+          4. ประเด็นอื่น ๆ
+  
+          หมายเหตุ:
+          - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
+          - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
+  
+          บทถอดเสียง:
+          """
+          ${transcript}
+          """
+        `;
 
-        กรุณาสรุปเนื้อหาจากบทถอดเสียงด้านล่าง
-        โดยจัดรูปแบบดังนี้:
-
-        1. สรุปเนื้อหาสำคัญ
-        2. มติที่ประชุม
-        3. สิ่งที่ต้องดำเนินการต่อ (Action Items)
-        - งาน | ผู้รับผิดชอบ | Deadline
-        4. ประเด็นอื่น ๆ
-
-        หมายเหตุ:
-        - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
-        - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
-
-        บทถอดเสียง:
-        """
-        ${transcript}
-        """
-      `;
-      return MOCK_RES_GERMINI;
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: prompt }],
-          },
-        ],
-        generationConfig: this.generationConfig,
-        safetySettings: this.safetySettings,
-      });
-      this.logger.log('result', result.response.text());
-      return { mom: result.response.text() };
+        const result = await model.generateContent({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: this.generationConfig,
+          safetySettings: this.safetySettings,
+        });
+        this.logger.log('result', result.response.text());
+        return { mom: result.response.text() };
+      }
     } catch (error) {
       this.logger.error('Gemini summarize error', error);
       throw new Error(`Gemini API Error: ${error.message}`);
