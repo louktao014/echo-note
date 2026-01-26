@@ -35,33 +35,36 @@ export class MomResultComponent {
   mom = input('');
   @Output() setStep = new EventEmitter<EnumStep>();
 
-  onSave(subJect: string) {
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        width: '500px',
-      })
-      .afterClosed()
-      .pipe(
-        switchMap((isConfirm: boolean) => {
-          if (isConfirm) {
-            this.onLoading(true);
-            const payload = this.preparingPayloadTranscript(subJect);
-            return this.transcriptService.saveTranscript(payload);
-          }
-          return EMPTY;
+  onSave(subJectValue: string) {
+    if (subJectValue) {
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          width: '500px',
         })
-      )
-      .subscribe({
-        next: () => {
-          console.log('save transcript success');
-          this.onLoading(false);
-        },
-        error: (err) => {
-          console.warn('save transcript error', err);
-          this.openStatusDialog(false);
-          this.onLoading(false);
-        },
-      });
+        .afterClosed()
+        .pipe(
+          switchMap((isConfirm: boolean) => {
+            if (isConfirm) {
+              this.onLoading(true);
+              const payload = this.preparingPayloadTranscript(subJectValue);
+              return this.transcriptService.saveTranscript(payload);
+            }
+            return EMPTY;
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.onLoading(false);
+          },
+          error: (err) => {
+            console.warn('save transcript error', err);
+            this.openStatusDialog(false, 'Something Went Wrong');
+            this.onLoading(false);
+          },
+        });
+    } else {
+      this.openStatusDialog(false, 'Please, enter subject name');
+    }
   }
 
   onLoading(isLoading: boolean) {
@@ -69,10 +72,10 @@ export class MomResultComponent {
       this.loadingDialogRef = this.openDialogLoading();
       this.loadingDialogRef.afterClosed().subscribe({
         next: () => {
-          this.openStatusDialog(true);
+          this.openStatusDialog(true, 'Save Transcript Complete');
         },
         error: () => {
-          this.openStatusDialog(false);
+          this.openStatusDialog(false, 'Something Went Wrong');
         },
       });
     } else {
@@ -95,10 +98,10 @@ export class MomResultComponent {
     return this.dialog.open(LoadingDialogComponent, dataDialog);
   }
 
-  openStatusDialog(isSuccess: boolean) {
+  openStatusDialog(isSuccess: boolean, message: string) {
     const dialogData = {
       title: isSuccess ? 'Done' : 'Error',
-      message: isSuccess ? 'Save Transcript Complete' : 'Something Went Wrong',
+      message,
       status: isSuccess ? 'success' : 'error',
     };
     this.dialog
@@ -108,7 +111,9 @@ export class MomResultComponent {
       })
       .afterClosed()
       .subscribe(() => {
-        this.setStep.emit(EnumStep.HISTORY);
+        if (isSuccess) {
+          this.setStep.emit(EnumStep.HISTORY);
+        }
       });
   }
 

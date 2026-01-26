@@ -54,7 +54,7 @@ export class HistoryComponent implements OnInit {
       .pipe(
         switchMap((isConfirm: boolean) => {
           if (item?.id && isConfirm) {
-            this.onLoading(true);
+            this.onLoading(true, 'Delete Transcript');
             const { id: transcriptID } = item;
             return this.deleteTranscript(transcriptID);
           }
@@ -82,14 +82,14 @@ export class HistoryComponent implements OnInit {
       });
   }
 
-  onLoading(isLoading: boolean) {
+  onLoading(isLoading: boolean, message: string = 'Get Transcript') {
     if (isLoading) {
       this.loadingDialogRef = this.dialog.open(LoadingDialogComponent, {
         width: '200px',
         height: '200px',
         data: {
           style: EnumLoadingStyle.SPRING,
-          message: 'Delete Transcript',
+          message,
           config: { isClosable: true },
         } as LoadingDialogData,
         disableClose: true,
