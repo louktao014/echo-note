@@ -1,6 +1,5 @@
 export declare class AppService {
     private readonly logger;
-    getHello(): string;
     getHealth(): {
         status: string;
         message: string;

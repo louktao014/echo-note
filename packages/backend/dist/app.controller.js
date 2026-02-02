@@ -67,10 +67,8 @@ let AppController = AppController_1 = class AppController {
         this.geminiService = geminiService;
         this.transcriptService = transcriptService;
     }
-    getHello() {
-        return this.appService.getHello();
-    }
     health() {
+        this.logger.log('health');
         return this.appService.getHealth();
     }
     async speechToText(file) {
@@ -78,21 +76,23 @@ let AppController = AppController_1 = class AppController {
         return this.speechService.transcribe(file);
     }
     async generateMom(body) {
+        this.logger.log('generate-mom');
         const transcript = body.chunks.join('');
         const result = await this.geminiService.summarizeMeeting(transcript);
-        this.logger.log('result', result);
         return result;
     }
     async saveTranscript(body) {
+        this.logger.log('save-transcript');
         const transcript = body;
-        this.logger.log('saveTranscript', transcript);
         const result = this.transcriptService.saveTranscript(transcript);
         return result;
     }
     async getHistory() {
+        this.logger.log('get-transcript');
         return this.transcriptService.getTranscripts();
     }
     async deleteTranscript(id) {
+        this.logger.log('delete-transcript');
         return this.transcriptService.deleteTranscript(id);
     }
     async uploadAudio(file) {
@@ -116,12 +116,6 @@ let AppController = AppController_1 = class AppController {
     }
 };
 exports.AppController = AppController;
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
-], AppController.prototype, "getHello", null);
 __decorate([
     (0, common_1.Get)('health'),
     __metadata("design:type", Function),

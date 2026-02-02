@@ -51,9 +51,6 @@ ffmpeg.setFfmpegPath(ffmpegStatic);
 ffmpeg.setFfprobePath(ffprobeStatic.path);
 let AppService = AppService_1 = class AppService {
     logger = new common_1.Logger(AppService_1.name);
-    getHello() {
-        return 'Hello World!';
-    }
     getHealth() {
         return {
             status: 'ok',

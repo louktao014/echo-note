@@ -101,12 +101,18 @@ export class MeetingPipelineComponent {
     this.onLoading(true);
     // this.step.set(EnumStep.GENERATING);
     const chunks = this.transcriptService.chunk(text);
-    this.meetingService.generateMoM(chunks).subscribe((result: any) => {
-      this.onLoading(false);
-      console.log('generateMoM', result);
-      const { mom } = result;
-      this.mom.set(mom);
-      this.step.set(EnumStep.DONE);
+    this.meetingService.generateMoM(chunks).subscribe({
+      next: (result: any) => {
+        this.onLoading(false);
+        console.log('generateMoM', result);
+        const { mom } = result;
+        this.mom.set(mom);
+        this.step.set(EnumStep.DONE);
+      },
+      error: (error) => {
+        this.onLoading(false);
+        console.warn('error', error?.message);
+      },
     });
   }
 }

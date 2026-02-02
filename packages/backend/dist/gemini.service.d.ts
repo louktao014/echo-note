@@ -4,7 +4,7 @@ export declare class GeminiService {
     private readonly generationConfig;
     private readonly safetySettings;
     constructor();
-    summarizeMeeting(transcript: string): Promise<{
+    summarizeMeeting(transcript: string, isTest?: boolean): Promise<{
         mom: string;
     }>;
     summarizeText(text: string): Promise<string>;

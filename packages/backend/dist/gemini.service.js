@@ -47,46 +47,50 @@ let GeminiService = GeminiService_1 = class GeminiService {
         }
         this.genAI = new generative_ai_1.GoogleGenerativeAI(apiKey);
     }
-    async summarizeMeeting(transcript) {
+    async summarizeMeeting(transcript, isTest = true) {
         this.logger.log('Summarizing meeting transcript with Gemini');
         try {
-            const model = this.genAI.getGenerativeModel({
-                model: 'gemini-2.5-flash',
-            });
-            const prompt = `
-        คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
-
-        กรุณาสรุปเนื้อหาจากบทถอดเสียงด้านล่าง
-        โดยจัดรูปแบบดังนี้:
-
-        1. สรุปเนื้อหาสำคัญ
-        2. มติที่ประชุม
-        3. สิ่งที่ต้องดำเนินการต่อ (Action Items)
-        - งาน | ผู้รับผิดชอบ | Deadline
-        4. ประเด็นอื่น ๆ
-
-        หมายเหตุ:
-        - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
-        - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
-
-        บทถอดเสียง:
-        """
-        ${transcript}
-        """
-      `;
-            return mock_data_1.MOCK_RES_GERMINI;
-            const result = await model.generateContent({
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [{ text: prompt }],
-                    },
-                ],
-                generationConfig: this.generationConfig,
-                safetySettings: this.safetySettings,
-            });
-            this.logger.log('result', result.response.text());
-            return { mom: result.response.text() };
+            if (isTest) {
+                return mock_data_1.MOCK_RES_GERMINI;
+            }
+            else {
+                const model = this.genAI.getGenerativeModel({
+                    model: 'gemini-2.5-flash',
+                });
+                const prompt = `
+          คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
+  
+          กรุณาสรุปเนื้อหาจากบทถอดเสียงด้านล่าง
+          โดยจัดรูปแบบดังนี้:
+  
+          1. สรุปเนื้อหาสำคัญ
+          2. มติที่ประชุม
+          3. สิ่งที่ต้องดำเนินการต่อ (Action Items)
+          - งาน | ผู้รับผิดชอบ | Deadline
+          4. ประเด็นอื่น ๆ
+  
+          หมายเหตุ:
+          - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
+          - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
+  
+          บทถอดเสียง:
+          """
+          ${transcript}
+          """
+        `;
+                const result = await model.generateContent({
+                    contents: [
+                        {
+                            role: 'user',
+                            parts: [{ text: prompt }],
+                        },
+                    ],
+                    generationConfig: this.generationConfig,
+                    safetySettings: this.safetySettings,
+                });
+                this.logger.log('result', result.response.text());
+                return { mom: result.response.text() };
+            }
         }
         catch (error) {
             this.logger.error('Gemini summarize error', error);

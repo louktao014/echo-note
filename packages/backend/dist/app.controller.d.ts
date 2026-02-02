@@ -10,7 +10,6 @@ export declare class AppController {
     private transcriptService;
     private readonly logger;
     constructor(appService: AppService, speechService: SpeechService, geminiService: GeminiService, transcriptService: TranscriptService);
-    getHello(): string;
     health(): {
         status: string;
         message: string;

@@ -30,13 +30,9 @@ export class AppController {
     private transcriptService: TranscriptService,
   ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Get('health')
   health() {
+    this.logger.log('health');
     return this.appService.getHealth();
   }
 
@@ -49,28 +45,32 @@ export class AppController {
 
   @Post('generate-mom')
   async generateMom(@Body() body: { chunks: string[] }) {
+    this.logger.log('generate-mom');
     const transcript = body.chunks.join('');
     const result = await this.geminiService.summarizeMeeting(transcript);
-    this.logger.log('result', result);
     return result;
   }
 
   @Post('save-transcript')
   async saveTranscript(@Body() body: ITranscript) {
+    this.logger.log('save-transcript');
     const transcript = body;
-    this.logger.log('saveTranscript', transcript);
     const result = this.transcriptService.saveTranscript(transcript);
     return result;
   }
 
   @Get('get-transcript')
   async getHistory() {
+    this.logger.log('get-transcript');
     return this.transcriptService.getTranscripts();
   }
   @Delete('delete-transcript/:id')
   async deleteTranscript(@Param('id') id: string) {
+    this.logger.log('delete-transcript');
     return this.transcriptService.deleteTranscript(id);
   }
+
+  /** Upload Audio File for Split video 10 sec and transcribe.*/
   @Post('upload-audio')
   @UseInterceptors(
     FileInterceptor('audio', {

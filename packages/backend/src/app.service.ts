@@ -15,10 +15,6 @@ ffmpeg.setFfprobePath(ffprobeStatic.path);
 export class AppService {
   private readonly logger = new Logger(AppService.name);
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   getHealth(): { status: string; message: string; timestamp: Date } {
     return {
       status: 'ok',

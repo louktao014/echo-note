@@ -136,4 +136,37 @@ export class HistoryComponent implements OnInit {
       data: dialogData,
     });
   }
+
+  addTranscript() {
+    this.onLoading(true);
+    const subject = 'test';
+    const content = 'test';
+    const payload = this.preparingPayloadTranscript(subject, content);
+    this.transcriptService.saveTranscript(payload).subscribe({
+      next: (result: any) => {
+        console.log('result', result);
+        this.onLoading(false);
+      },
+      error: (error) => {
+        console.warn('error', error);
+        this.onLoading(false);
+      },
+    });
+  }
+
+  preparingPayloadTranscript(subJect: string, content: string) {
+    const now = new Date().toISOString();
+    const payload: ITranscript = {
+      user_id: '0',
+      sub_ject: subJect,
+      content: content,
+      created_at: new Date(now).toLocaleString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+      }),
+      updated_at: new Date(now).toLocaleString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+      }),
+    };
+    return payload;
+  }
 }
