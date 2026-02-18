@@ -28,7 +28,11 @@ export class TranscriptService {
   }
 
   async getTranscripts() {
-    return this.supabase.getClient().from('transcripts').select('*');
+    return this.supabase
+      .getClient()
+      .from('transcripts')
+      .select('*')
+      .order('created_at', { ascending: false });
   }
   async deleteTranscript(id: string) {
     return this.supabase.getClient().from('transcripts').delete().eq('id', id);

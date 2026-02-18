@@ -30,7 +30,7 @@ import {
   ],
 })
 export class MeetingPipelineComponent {
-  step = signal<EnumStep>(EnumStep.UPLOAD);
+  step = signal<EnumStep>(EnumStep.HISTORY);
   EnumStep = EnumStep;
 
   transcript = signal('');
@@ -42,7 +42,6 @@ export class MeetingPipelineComponent {
   private loadingDialogRef?: MatDialogRef<LoadingDialogComponent>;
 
   onUpload(file: File) {
-    // this.step.set(EnumStep.LOADING);
     this.onLoading(true);
     this.audioService.speechToText(file).subscribe({
       next: (response: any) => {
@@ -97,11 +96,42 @@ export class MeetingPipelineComponent {
     console.log(urlPath);
   }
 
-  onConfirmTranscript(text: string) {
+  onConfirmTranscript(params: { action: string; content: string }) {
     this.onLoading(true);
+    const { action, content } = params;
+    switch (action) {
+      case 'save':
+        this.onSaveTransScript(content);
+        break;
+      case 'generate':
+        this.onGenerateMOM(content);
+        break;
+    }
+  }
+
+  onSaveTransScript(content: string) {
+    const now = new Date().toISOString();
+    const currentDate = new Date(now).toLocaleString('th-TH', {
+      timeZone: 'Asia/Bangkok',
+    });
+    const subject = `Trascript On :${currentDate}`;
+    const payload = this.transcriptService.preparingPayloadTranscript(subject, content);
+    this.transcriptService.saveTranscript(payload).subscribe({
+      next: () => {
+        this.onLoading(false);
+        this.step.set(EnumStep.HISTORY);
+      },
+      error: (error) => {
+        console.warn('error =>', error);
+        this.onLoading(false);
+      },
+    });
+  }
+
+  onGenerateMOM(content: string) {
     // this.step.set(EnumStep.GENERATING);
-    const chunks = this.transcriptService.chunk(text);
-    this.meetingService.generateMoM(chunks).subscribe({
+    // const chunks = this.transcriptService.chunk(content);
+    this.meetingService.generateMoM([content]).subscribe({
       next: (result: any) => {
         this.onLoading(false);
         console.log('generateMoM', result);

@@ -25,4 +25,11 @@ export class HistoryDetailDialogComponent {
   onCopyToClipboard() {
     navigator.clipboard.writeText(this.data.content);
   }
+
+  onExit() {
+    this.dialogRef.close();
+  }
+  onSave() {
+    this.dialogRef.close();
+  }
 }

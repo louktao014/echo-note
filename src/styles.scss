@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 // @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 :root {
   --primary-color: #6f4e37; /* Coffee Brown */
@@ -15,13 +16,14 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
   --warning-color: #e57373;
   --font-body: 'Patrick Hand', 'Inter', sans-serif;
-  --font-caveat: 'Caveat', cursive;
+  --font-noto: 'Noto Sans Thai', sans-serif;
+  --font-quicksand: 'Quicksand', sans-serif;
 }
 
 body {
-  font-family: var(--font-caveat);
+  font-family: var(--font-quicksand);
   background-color: var(--background-color);
-  color: #eaeabe; //var(--text-color);
+  color: #eaeabe;
   margin: 0;
   padding: 0;
 }

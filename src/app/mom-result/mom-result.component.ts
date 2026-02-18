@@ -46,7 +46,7 @@ export class MomResultComponent {
           switchMap((isConfirm: boolean) => {
             if (isConfirm) {
               this.onLoading(true);
-              const payload = this.preparingPayloadTranscript(subJectValue);
+              const payload = this.transcriptService.preparingPayloadTranscript(subJectValue, this.mom());
               return this.transcriptService.saveTranscript(payload);
             }
             return EMPTY;
@@ -117,21 +117,7 @@ export class MomResultComponent {
       });
   }
 
-  preparingPayloadTranscript(subJect: string) {
-    const now = new Date().toISOString();
-    const payload: ITranscript = {
-      user_id: '0',
-      sub_ject: subJect,
-      content: this.mom(),
-      created_at: new Date(now).toLocaleString('th-TH', {
-        timeZone: 'Asia/Bangkok',
-      }),
-      updated_at: new Date(now).toLocaleString('th-TH', {
-        timeZone: 'Asia/Bangkok',
-      }),
-    };
-    return payload;
-  }
+
 
   onCopyToClipboard() {
     navigator.clipboard.writeText(this.mom());

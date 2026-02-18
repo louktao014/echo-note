@@ -3,7 +3,7 @@
   border: 1px solid #e0d8c0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   position: relative;
   width: auto;
   text-wrap: auto;
@@ -15,7 +15,7 @@
   .header {
     display: flex;
     align-items: center;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
   }
   .icon {
     width: 48px;
@@ -29,7 +29,7 @@
     overflow: hidden;
     display: flex;
     justify-content: center;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
   }
   .success-icon {
     color: #2ecc71;
@@ -44,7 +44,7 @@
     font-size: 28px;
     color: #2c3e50;
     padding: 10px;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
   }
 }
 
@@ -55,7 +55,7 @@ mat-dialog-content {
 }
 
 button {
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: #2c3e50;

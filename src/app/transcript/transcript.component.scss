@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem; // Adjusted gap
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
 }
 
 h2 {
@@ -30,7 +30,7 @@ h2 {
   font-size: 1rem;
   white-space: pre-wrap;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   p {
     margin: 0;
   }
@@ -43,14 +43,14 @@ h2 {
   border-radius: 12px;
   border: 1px solid #d2b48c; // Tan color for border
   background-color: #ffffff;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1rem;
   line-height: 1.8;
   color: #3b2f2f;
   resize: vertical; // Allow vertical resizing
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   &:focus {
     outline: none;
     border-color: #6f4e37; // Coffee Brown on focus
@@ -77,14 +77,14 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .btn-edit {
   background-color: transparent;
   color: #6f4e37;
   border-color: #d2b48c;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   &:hover {
     background-color: #fdfaf6;
     border-color: #6f4e37;
@@ -93,7 +93,7 @@ h2 {
 
   span {
     font-weight: 700;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
   }
 }
 
@@ -101,7 +101,7 @@ h2 {
   background-color: #6f4e37; // Coffee Brown
   color: #ffffff;
   border-color: #6f4e37;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   &:hover {
     background-color: #5a3f2e; // Walnut Brown
     border-color: #5a3f2e;

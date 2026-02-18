@@ -16,11 +16,16 @@
     padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
     background-color: #fff;
   }
   .btn-audio:hover,
   .btn-transcript:hover {
+    background-color: #5a3f2e;
+    color: #f5f5dc;
+  }
+
+  .btn-active {
     background-color: #5a3f2e;
     color: #f5f5dc;
   }
@@ -51,7 +56,7 @@ p {
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
-  font-family: 'Caveat', cursive;
+  font-family: 'Quicksand', sans-serif;
   letter-spacing: 0.5px;
   transition: all 0.3s ease-in-out;
   cursor: default;
@@ -68,7 +73,7 @@ p {
     color: #5a3f2e; // Walnut Brown text
     border-color: #5a3f2e;
     font-weight: 700;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
     &:hover {
       background-color: #e0e0c8;
       border-color: #6f4e37;

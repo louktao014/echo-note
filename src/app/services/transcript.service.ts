@@ -33,6 +33,22 @@ export class TranscriptService {
     return chunks;
   }
 
+  preparingPayloadTranscript(subJect: string,transcript:string) {
+    const now = new Date().toISOString();
+    const payload: ITranscript = {
+      user_id: '0',
+      sub_ject: subJect,
+      content: transcript,
+      created_at: new Date(now).toLocaleString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+      }),
+      updated_at: new Date(now).toLocaleString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+      }),
+    };
+    return payload;
+  }
+
   saveTranscript(payload: ITranscript) {
     return this.http.post('/api/save-transcript', payload);
   }

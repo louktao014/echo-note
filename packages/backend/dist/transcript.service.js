@@ -34,7 +34,11 @@ let TranscriptService = class TranscriptService {
         return this.supabase.getClient().from('transcripts').insert(raw);
     }
     async getTranscripts() {
-        return this.supabase.getClient().from('transcripts').select('*');
+        return this.supabase
+            .getClient()
+            .from('transcripts')
+            .select('*')
+            .order('created_at', { ascending: false });
     }
     async deleteTranscript(id) {
         return this.supabase.getClient().from('transcripts').delete().eq('id', id);

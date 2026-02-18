@@ -39,19 +39,19 @@ body {
   height: 100%;
 
   // Font style
-  // font-family: 'Caveat', cursive;
+  // font-family: 'Quicksand', sans-serif;;
 
   /* Mobile (phones) */
   @media screen and (max-width: 767px) {
     body {
-      font-family: 'Kodchasan', sans-serif;
+      font-family: 'Quicksand', sans-serif;
     }
   }
 
   /* Tablet */
   @media screen and (min-width: 768px) and (max-width: 1023px) {
     body {
-      font-family: 'Kodchasan', sans-serif;
+      font-family: 'Quicksand', sans-serif;
     }
   }
 }
@@ -75,7 +75,7 @@ body {
     font-weight: 700;
     letter-spacing: 1px;
     color: #6f4e37;
-    font-family: 'Caveat', cursive;
+    font-family: 'Quicksand', sans-serif;
   }
 }
 

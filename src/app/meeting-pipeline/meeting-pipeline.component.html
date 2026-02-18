@@ -1,14 +1,28 @@
 <div class="tab-container">
-  <div class="btn-audio" (click)="step.set(EnumStep.UPLOAD)">UPLOAD</div>
-  <div class="btn-transcript" (click)="step.set(EnumStep.TRANSCRIPT)">TRANSCRIPT</div>
-  <div class="btn-transcript" (click)="step.set(EnumStep.HISTORY)">HISTORY</div>
-  <!-- <div class="btn-transcript" (click)="openStatusDialog('success')">DIALOG</div>
-  <div class="btn-transcript" (click)="onLoading(true)">LOADING</div> -->
+  <div
+    class="btn-transcript"
+    (click)="step.set(EnumStep.HISTORY)"
+    [ngClass]="{ 'btn-active': step() === EnumStep.HISTORY }"
+  >
+    TRANSCRIPT LIST
+  </div>
+  <div
+    class="btn-audio"
+    (click)="step.set(EnumStep.UPLOAD)"
+    [ngClass]="{ 'btn-active': step() === EnumStep.UPLOAD }"
+  >
+    UPLOAD
+  </div>
+  <div
+    class="btn-transcript"
+    (click)="step.set(EnumStep.TRANSCRIPT)"
+    [ngClass]="{ 'btn-active': step() === EnumStep.TRANSCRIPT }"
+  >
+    TRANSCRIPT
+  </div>
 </div>
 @switch (step()) { @case (EnumStep.UPLOAD) {
 <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-} @case (EnumStep.LOADING) {
-<p>Loading....</p>
 } @case (EnumStep.TRANSCRIBE) {
 <p>Generate Speech To Text...</p>
 } @case (EnumStep.TRANSCRIPT) {
@@ -24,7 +38,6 @@
 <app-history></app-history>
 } @case ('ALL') {
 <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-<p>Loading....</p>
 <p>Generate Speech To Text...</p>
 <app-transcript
   [transcript]="transcript()"
