@@ -22,7 +22,7 @@ import { StatusDialogComponent } from '../dialog/status-dialog.component';
 export class TranscriptComponent {
   private dialog = inject(MatDialog);
   transcript = input<string>('');
-  confirm = output<{action:string,content:string}>();
+  confirm = output<{ action: string; content: string }>();
 
   isEditing = signal(false);
   editedTranscript = signal('');
@@ -49,7 +49,7 @@ export class TranscriptComponent {
     this.dialog.open(StatusDialogComponent, { width: '500px', data: dialogData });
   }
 
-  proceed(action:string) {
-    this.confirm.emit({action,content:this.editedTranscript()});
+  proceed(action: string) {
+    this.confirm.emit({ action, content: this.editedTranscript() });
   }
 }

@@ -27,3 +27,28 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.success-snackbar {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+.warning-snackbar {
+  background: #ff9800;
+  color: white;
+}
+
+.success-snackbar .mdc-snackbar__surface {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container.success-snackbar .mdc-snackbar__surface {
+  background: #4caf50 !important;
+  color: white !important;
+}

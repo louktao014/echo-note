@@ -7,18 +7,18 @@
     TRANSCRIPT LIST
   </div>
   <div
-    class="btn-audio"
-    (click)="step.set(EnumStep.UPLOAD)"
-    [ngClass]="{ 'btn-active': step() === EnumStep.UPLOAD }"
-  >
-    UPLOAD
-  </div>
-  <div
     class="btn-transcript"
     (click)="step.set(EnumStep.TRANSCRIPT)"
     [ngClass]="{ 'btn-active': step() === EnumStep.TRANSCRIPT }"
   >
     TRANSCRIPT
+  </div>
+  <div
+    class="btn-audio"
+    (click)="step.set(EnumStep.UPLOAD)"
+    [ngClass]="{ 'btn-active': step() === EnumStep.UPLOAD }"
+  >
+    UPLOAD
   </div>
 </div>
 @switch (step()) { @case (EnumStep.UPLOAD) {

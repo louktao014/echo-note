@@ -1,7 +1,9 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content>
-  <p>{{ data.content }}</p>
-  <small>{{ data.date | date : 'medium' }}</small>
+  <small>create_at : {{ data.date | date : 'MMM d, yyyy, HH:mm' : 'UTC' }}</small>
+  <div class="container-textarea">
+    <textarea class="content-textarea" [value]="this.data.content" [disabled]="true"></textarea>
+  </div>
 </mat-dialog-content>
 <div class="history-btn-container">
   <mat-dialog-actions>

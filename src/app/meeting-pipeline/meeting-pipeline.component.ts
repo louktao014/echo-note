@@ -111,10 +111,16 @@ export class MeetingPipelineComponent {
 
   onSaveTransScript(content: string) {
     const now = new Date().toISOString();
-    const currentDate = new Date(now).toLocaleString('th-TH', {
+    const currentDate = new Date(now).toLocaleString('en-US', {
       timeZone: 'Asia/Bangkok',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
     });
-    const subject = `Trascript On :${currentDate}`;
+    const subject = `Trascript On : ${currentDate}`;
     const payload = this.transcriptService.preparingPayloadTranscript(subject, content);
     this.transcriptService.saveTranscript(payload).subscribe({
       next: () => {

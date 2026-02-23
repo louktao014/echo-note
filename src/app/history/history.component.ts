@@ -126,13 +126,14 @@ export class HistoryComponent implements OnInit {
 
   openDialog(item: ITranscript): void {
     const dialogData = {
-      title: `${item.sub_ject}, Date :${new Date().toLocaleDateString()}`,
+      title: `${item.sub_ject}`,
       content: item.content,
-      date: new Date(),
+      date: item.created_at,
     };
-
+    console.log('dialogData', dialogData);
     this.dialog.open(HistoryDetailDialogComponent, {
-      width: '500px',
+      width: '1000px',
+      maxWidth: 'none',
       data: dialogData,
     });
   }
