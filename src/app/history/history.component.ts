@@ -153,4 +153,38 @@ export class HistoryComponent implements OnInit {
       },
     });
   }
+
+  exportHistory(): void {
+    const historyData = this.history();
+    if (historyData.length === 0) {
+      this.dialog.open(StatusDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Info',
+          message: 'There is no history to export.',
+          status: 'info',
+        },
+      });
+      return;
+    }
+    console.log('historyData', historyData);
+    return;
+    const formattedData = historyData
+      .map((item) => {
+        return `Subject: ${item.sub_ject}\nDate: ${new Date(item.created_at).toLocaleString()}\n\n${
+          item.content
+        }\n\n--------------------------------------------------\n`;
+      })
+      .join('\n');
+
+    const blob = new Blob([formattedData], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'transcription_history.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 }
