@@ -29,7 +29,7 @@ export class HistoryDetailDialogComponent {
       .writeText(this.data.content)
       .then(() => {
         this.snackBar.open('Copy Success', 'ปิด', {
-          duration: 53000, // 3 วิ
+          duration: 3000, // 3 seconds
           horizontalPosition: 'right',
           verticalPosition: 'bottom',
           panelClass: ['success-snackbar'],
@@ -37,7 +37,7 @@ export class HistoryDetailDialogComponent {
       })
       .catch(() => {
         this.snackBar.open('Copy Fail', 'ปิด', {
-          duration: 3000, // 3 วิ
+          duration: 3000, // 3 seconds
           horizontalPosition: 'right',
           verticalPosition: 'bottom',
           panelClass: ['error-snackbar'],
@@ -50,5 +50,17 @@ export class HistoryDetailDialogComponent {
   }
   onSave() {
     this.dialogRef.close();
+  }
+
+  exportTranscript() {
+    const blob = new Blob([this.data.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${this.data.title}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 }
