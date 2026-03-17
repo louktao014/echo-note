@@ -33,7 +33,7 @@ export class TranscriptService {
     return chunks;
   }
 
-  preparingPayloadTranscript(subJect: string,transcript:string) {
+  preparingPayloadTranscript(subJect: string, transcript: string) {
     const now = new Date().toISOString();
     const payload: ITranscript = {
       user_id: '0',

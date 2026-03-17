@@ -24,7 +24,7 @@ let SpeechService = class SpeechService {
                 filename: file.originalname,
                 contentType: file.mimetype,
             });
-            const response = await this.transcribeWithElevenLabs(formData);
+            const response = await this.transcribeWithElevenLabs(formData, false);
             const result = {
                 transcript: response?.data?.text,
             };
@@ -36,6 +36,7 @@ let SpeechService = class SpeechService {
         }
     }
     async transcribeWithElevenLabs(formData, isTest = true) {
+        this.logger.log('Process...');
         let response;
         if (isTest) {
             response = {
@@ -51,6 +52,7 @@ let SpeechService = class SpeechService {
                 },
             });
         }
+        this.logger.log('... Done ...');
         return response;
     }
 };

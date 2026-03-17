@@ -58,7 +58,19 @@ export class MeetingPipelineComponent {
       error: (error) => {
         this.step.set(EnumStep.UPLOAD);
         this.onLoading(false);
+        this.openStatusDialog('error');
         console.warn('error', error);
+      },
+    });
+  }
+
+  onSplitAudio(file: File) {
+    this.audioService.convertToAudio(file).subscribe({
+      next: () => {
+        this.openStatusDialog('success');
+      },
+      error: () => {
+        this.openStatusDialog('error');
       },
     });
   }

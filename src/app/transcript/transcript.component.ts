@@ -35,21 +35,27 @@ export class TranscriptComponent {
 
   toggleEditSave() {
     this.isEditing.update((editing) => !editing);
-    if (!this.isEditing()) {
-      this.openStatusDialog('success');
+    if (!this.isEditing() && this.editedTranscript() !== '') {
+      this.openStatusDialog('success', 'Done');
     }
   }
-  openStatusDialog(status: string) {
+  openStatusDialog(status: string, msg: string) {
     const isSuccess = status === 'success';
     const dialogData = {
       title: 'Status',
-      message: isSuccess ? 'Done' : 'Something went wrong',
+      message: msg,
       status: isSuccess ? 'success' : 'error',
     };
+
     this.dialog.open(StatusDialogComponent, { width: '500px', data: dialogData });
   }
 
   proceed(action: string) {
+    if (this.editedTranscript() === '') {
+      this.openStatusDialog('error', 'Transcript is Empty!!');
+      return;
+    }
+
     this.confirm.emit({ action, content: this.editedTranscript() });
   }
 }

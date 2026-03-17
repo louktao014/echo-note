@@ -57,27 +57,7 @@ let GeminiService = GeminiService_1 = class GeminiService {
                 const model = this.genAI.getGenerativeModel({
                     model: 'gemini-2.5-flash',
                 });
-                const prompt = `
-          คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
-  
-          กรุณาสรุปเนื้อหาจากบทถอดเสียงด้านล่าง
-          โดยจัดรูปแบบดังนี้:
-  
-          1. สรุปเนื้อหาสำคัญ
-          2. มติที่ประชุม
-          3. สิ่งที่ต้องดำเนินการต่อ (Action Items)
-          - งาน | ผู้รับผิดชอบ | Deadline
-          4. ประเด็นอื่น ๆ
-  
-          หมายเหตุ:
-          - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
-          - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
-  
-          บทถอดเสียง:
-          """
-          ${transcript}
-          """
-        `;
+                const prompt = (0, mock_data_1._prompt)(transcript);
                 const result = await model.generateContent({
                     contents: [
                         {

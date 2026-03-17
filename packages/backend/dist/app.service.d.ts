@@ -8,4 +8,7 @@ export declare class AppService {
     processAudio(file: Express.Multer.File): Promise<string[]>;
     private getAudioDuration;
     private splitAudio;
+    convertMovToMp3(inputPath: string): Promise<string>;
+    private hasAudioStream;
+    _convertMovToMp3(inputPath: string): Promise<string>;
 }

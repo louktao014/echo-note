@@ -114,6 +114,14 @@ let AppController = AppController_1 = class AppController {
             throw new common_1.InternalServerErrorException('Audio processing failed.');
         }
     }
+    async uploadFile(file) {
+        this.logger.log('file', file);
+        const outputPath = await this.appService._convertMovToMp3(file.path);
+        return {
+            message: 'Converted successfully',
+            output: outputPath,
+        };
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -176,6 +184,26 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "uploadAudio", null);
+__decorate([
+    (0, common_1.Post)('convert-to-audio'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+                const filename = path
+                    .parse(file.originalname)
+                    .name.replace(/\s/g, '_');
+                const extension = path.parse(file.originalname).ext;
+                const newFileName = filename.replace(/\./g, '_');
+                cb(null, `${newFileName}_${extension}`);
+            },
+        }),
+    })),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "uploadFile", null);
 exports.AppController = AppController = AppController_1 = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService,

@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const originPort = 4200; // PORT frontend [Angular];
+  // const originPort = 4200; // PORT frontend [Angular];
 
   console.log('process.env.PORT :', process.env.PORT);
 

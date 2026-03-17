@@ -12,6 +12,13 @@ export class AudioService {
     return this.http.post<{ transcript: string }>('/api/upload-audio', form);
   }
 
+  convertToAudio(file: File) {
+    const form = new FormData();
+    form.append('file', file);
+
+    return this.http.post('/api/convert-to-audio', form);
+  }
+
   speechToText(audioFile: File) {
     const formData = new FormData();
     formData.append('file', audioFile);

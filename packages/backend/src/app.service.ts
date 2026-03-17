@@ -1,4 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -112,5 +117,123 @@ export class AppService {
     fs.unlinkSync(inputPath);
 
     return outputPaths;
+  }
+
+  async convertMovToMp3(inputPath: string): Promise<string> {
+    const absoluteInput = path.resolve(inputPath);
+    const canConvert = await this.hasAudioStream(absoluteInput);
+    if (!canConvert) {
+      throw new BadRequestException(
+        'ไม่สามารถแปลงไฟล์ได้เนื่องจากวิดีโอนี้ไม่มีเสียง',
+      );
+    }
+    return new Promise((resolve, reject) => {
+      const fileBasename = path.basename(
+        absoluteInput,
+        path.extname(absoluteInput),
+      );
+      const sanitizedBasename = fileBasename.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+      const outputDir = path.resolve(path.dirname(absoluteInput), 'processed');
+
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      const outputPath = path.resolve(outputDir, `${sanitizedBasename}.mp3`);
+
+      this.logger.log('inputPath', absoluteInput);
+      this.logger.log('outputDir', outputDir);
+      this.logger.log('outputPath', outputPath);
+
+      ffmpeg(absoluteInput)
+        // .noVideo()
+        // .audioCodec('libmp3lame')
+        // .audioQuality(2)
+        .inputFormat('mov')
+        .outputFormat('mp3')
+        .on('start', () => {
+          console.log('Processing....');
+        })
+        .on('end', () => {
+          console.log('Processing finished !');
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.log('An error occurred: ' + err.message);
+          reject(
+            new InternalServerErrorException({
+              statusCode: 500,
+              message: 'การประมวลผลไฟล์เสียงล้มเหลวกลางคัน',
+              error: 'FFmpeg Process Error',
+              detail: err.message.includes('code 234')
+                ? 'กระบวนการถูกขัดจังหวะ (อาจเกิดจากพื้นที่เต็มหรือไฟล์เสียหาย)'
+                : err.message,
+            }),
+          );
+        })
+        .save(outputPath);
+    });
+  }
+
+  private async hasAudioStream(inputPath: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      ffmpeg.ffprobe(inputPath, (err, metadata) => {
+        if (err) return resolve(false);
+        const hasAudio = metadata.streams.some((s) => s.codec_type === 'audio');
+        resolve(hasAudio);
+      });
+    });
+  }
+  async _convertMovToMp3(inputPath: string): Promise<string> {
+    const absoluteInput = path.resolve(inputPath);
+
+    // เช็ค Audio เบื้องต้น (ตามที่เราคุยกันก่อนหน้า)
+    const hasAudio = await this.hasAudioStream(absoluteInput);
+    if (!hasAudio) {
+      throw new BadRequestException(
+        'ไม่สามารถแปลงไฟล์ได้เนื่องจากวิดีโอนี้ไม่มีเสียง',
+      );
+    }
+
+    // เตรียม Paths
+    const fileBasename = path.basename(
+      absoluteInput,
+      path.extname(absoluteInput),
+    );
+    const sanitizedBasename = fileBasename.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const outputDir = path.resolve(path.dirname(absoluteInput), 'video');
+    const outputPath = path.resolve(outputDir, `${sanitizedBasename}.mp3`);
+
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    return new Promise((resolve, reject) => {
+      ffmpeg(absoluteInput)
+        .noVideo()
+        .audioCodec('libmp3lame')
+        .audioQuality(2)
+        .on('start', () => {
+          this.logger.log('Processing....');
+        })
+        .on('error', (err, stdout, stderr) => {
+          this.logger.error(`FFmpeg Process Error: ${err.message}`);
+          this.logger.error(`FFmpeg STDERR: ${stderr}`);
+          reject(
+            new InternalServerErrorException({
+              message: 'การแปลงไฟล์ล้มเหลวระหว่างดำเนินการ',
+              detail: err.message,
+              timestamp: new Date().toISOString(),
+            }),
+          );
+          fs.unlinkSync(inputPath);
+        })
+        .on('end', () => {
+          resolve(outputPath);
+          fs.unlinkSync(inputPath);
+        })
+        .save(outputPath);
+    });
   }
 }

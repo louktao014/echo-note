@@ -31,4 +31,8 @@ export declare class AppController {
         originalFile: string;
         processedFiles: string[];
     }>;
+    uploadFile(file: Express.Multer.File): Promise<{
+        message: string;
+        output: string;
+    }>;
 }

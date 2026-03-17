@@ -20,7 +20,7 @@ export class SpeechService {
         contentType: file.mimetype,
       });
 
-      const response = await this.transcribeWithElevenLabs(formData);
+      const response = await this.transcribeWithElevenLabs(formData, false);
 
       const result = {
         transcript: response?.data?.text,
@@ -36,6 +36,7 @@ export class SpeechService {
     formData: FormData,
     isTest: boolean = true,
   ): Promise<AxiosResponse<{ text: string }>> {
+    this.logger.log('Process...');
     let response: AxiosResponse<{ text: string }>;
     if (isTest) {
       response = {
@@ -55,7 +56,7 @@ export class SpeechService {
         },
       );
     }
-
+    this.logger.log('... Done ...');
     return response;
   }
 }

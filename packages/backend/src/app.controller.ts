@@ -110,4 +110,29 @@ export class AppController {
       throw new InternalServerErrorException('Audio processing failed.');
     }
   }
+
+  @Post('convert-to-audio')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const filename = path
+            .parse(file.originalname)
+            .name.replace(/\s/g, '_');
+          const extension = path.parse(file.originalname).ext;
+          const newFileName = filename.replace(/\./g, '_');
+          cb(null, `${newFileName}_${extension}`);
+        },
+      }),
+    }),
+  )
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    this.logger.log('file', file);
+    const outputPath = await this.appService._convertMovToMp3(file.path);
+    return {
+      message: 'Converted successfully',
+      output: outputPath,
+    };
+  }
 }

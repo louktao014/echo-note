@@ -35,7 +35,6 @@ export class HistoryComponent implements OnInit {
     this.transcriptService.getAllTranscript().subscribe({
       next: (result: any) => {
         this.history.set(result.data);
-        console.log('history', this.history());
         this.onLoading(false);
       },
       error: (error) => {
@@ -142,7 +141,7 @@ export class HistoryComponent implements OnInit {
     this.onLoading(true);
     const subject = 'test';
     const content = 'test';
-    const payload = this.preparingPayloadTranscript(subject, content);
+    const payload = this.transcriptService.preparingPayloadTranscript(subject, content);
     this.transcriptService.saveTranscript(payload).subscribe({
       next: (result: any) => {
         console.log('result', result);
@@ -153,21 +152,5 @@ export class HistoryComponent implements OnInit {
         this.onLoading(false);
       },
     });
-  }
-
-  preparingPayloadTranscript(subJect: string, content: string) {
-    const now = new Date().toISOString();
-    const payload: ITranscript = {
-      user_id: '0',
-      sub_ject: subJect,
-      content: content,
-      created_at: new Date(now).toLocaleString('th-TH', {
-        timeZone: 'Asia/Bangkok',
-      }),
-      updated_at: new Date(now).toLocaleString('th-TH', {
-        timeZone: 'Asia/Bangkok',
-      }),
-    };
-    return payload;
   }
 }
