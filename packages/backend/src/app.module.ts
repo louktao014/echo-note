@@ -6,6 +6,7 @@ import { GeminiService } from './gemini.service';
 import { SpeechService } from './speech.service';
 import { SupabaseModule } from './supabse/supabase.module';
 import { TranscriptService } from './transcript.service';
+import { HttpModule } from '@nestjs/axios/dist/http.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TranscriptService } from './transcript.service';
       isGlobal: true, // Make ConfigModule globally available
     }),
     SupabaseModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService, GeminiService, SpeechService, TranscriptService],

@@ -11,6 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
+import { EnumAIAgent, EnumAIModel, IConfirmTranscriptParams } from '../model/transcript.mode';
 
 @Component({
   selector: 'app-transcript',
@@ -22,10 +23,13 @@ import { StatusDialogComponent } from '../dialog/status-dialog.component';
 export class TranscriptComponent {
   private dialog = inject(MatDialog);
   transcript = input<string>('');
-  confirm = output<{ action: string; content: string }>();
+  confirm = output<IConfirmTranscriptParams>();
 
-  isEditing = signal(false);
-  editedTranscript = signal('');
+  isEditing = signal<boolean>(false);
+  editedTranscript = signal<string>('');
+  editedSubject = signal<string>('');
+  selectedAIAgent = signal<EnumAIAgent>(EnumAIAgent.ThaiLLM);
+  selectedAIModel = signal<EnumAIModel>(EnumAIModel.QWEN_3);
 
   constructor() {
     effect(() => {
@@ -56,6 +60,23 @@ export class TranscriptComponent {
       return;
     }
 
-    this.confirm.emit({ action, content: this.editedTranscript() });
+    this.confirm.emit({
+      action,
+      subject: this.editedSubject(),
+      content: this.editedTranscript(),
+      selectedAI: {
+        agent: this.selectedAIAgent(),
+        model: this.selectedAIModel(),
+      },
+    });
+  }
+
+  onModelChanges(event: Event, type: 'agent' | 'model') {
+    const selectElement = event.target as HTMLSelectElement;
+    if (type === 'agent') {
+      this.selectedAIAgent.set(selectElement.value as EnumAIAgent);
+    } else if (type === 'model') {
+      this.selectedAIModel.set(selectElement.value as EnumAIModel);
+    }
   }
 }

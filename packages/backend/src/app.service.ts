@@ -1,3 +1,4 @@
+import { HttpService } from '@nestjs/axios/dist/http.service';
 import {
   BadRequestException,
   Injectable,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { firstValueFrom } from 'rxjs';
 
 // Use require for CommonJS modules
 const ffmpeg = require('fluent-ffmpeg');
@@ -20,12 +22,67 @@ ffmpeg.setFfprobePath(ffprobeStatic.path);
 export class AppService {
   private readonly logger = new Logger(AppService.name);
 
-  getHealth(): { status: string; message: string; timestamp: Date } {
-    return {
-      status: 'ok',
-      message: 'Server is running',
-      timestamp: new Date(),
+  constructor(private readonly httpService: HttpService) {}
+
+  async getHealth(): Promise<{
+    backend_healthy: {
+      status: string;
+      message: string;
+      timestamp: string;
     };
+    supabase_healthy: {
+      status: string;
+      message: string;
+      timestamp: string;
+    };
+  }> {
+    try {
+      const res = await this.checkSupabaseHealth();
+
+      const supabaseHealthy =
+        res?.status === 'healthy' || res?.name === 'GoTrue';
+
+      return {
+        backend_healthy: {
+          status: 'healthy',
+          message: 'Backend is healthy',
+          timestamp: new Date().toISOString(),
+        },
+
+        supabase_healthy: {
+          status: supabaseHealthy ? 'healthy' : 'unhealthy',
+          message: supabaseHealthy
+            ? 'Supabase is healthy'
+            : 'Supabase is unhealthy',
+          timestamp: new Date().toISOString(),
+        },
+      };
+    } catch (err: any) {
+      throw new InternalServerErrorException({
+        message: 'Supabase health check failed',
+        detail: err?.message || 'Unknown error',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  async checkSupabaseHealth() {
+    const url = 'https://tlquyifvsxzeflfboimh.supabase.co/auth/v1/health';
+    const headers = {
+      apikey: `${process.env.SUPABASE_ANON_KEY}`,
+      Authorization: `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+    };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(url, {
+          headers,
+        }),
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+      throw error;
+    }
   }
 
   async processAudio(file: Express.Multer.File): Promise<string[]> {
@@ -45,7 +102,7 @@ export class AppService {
         this.logger.log('Audio is 10 minutes or less, no splitting needed.');
         const outputPath = path.join(outputDir, file.originalname);
         fs.renameSync(inputPath, outputPath);
-        console.log('outputPath', [outputPath]);
+        this.logger.log('outputPath', [outputPath]);
         return [''];
       } else {
         this.logger.log(
@@ -57,11 +114,11 @@ export class AppService {
           outputDir,
           file.originalname,
         );
-        console.log('splt', splt);
+        this.logger.log('splt', splt);
         return splt;
       }
     } catch (error) {
-      this.logger.error('Error processing audio', error.stack);
+      this.logger.error('Error processing audio', error);
       fs.unlinkSync(inputPath);
       throw new Error('Failed to process audio file.');
     }

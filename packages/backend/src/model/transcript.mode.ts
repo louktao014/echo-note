@@ -5,3 +5,18 @@ export interface ITranscript {
   created_at: string; // ISO datetime
   updated_at: string; // ISO datetime
 }
+
+export enum EnumAIAgent {
+  ThaiLLM = 'thaiLLM',
+  Germini = 'germini',
+}
+
+export enum EnumAIModel {
+  OPEN_THAI_GPT = 'OPEN_THAI_GPT',
+  QWEN_3 = 'QWEN_3',
+}
+
+export const AI_MODEL: Record<string, string> = {
+  [EnumAIModel.OPEN_THAI_GPT]: 'openthaigpt-thaillm-8b-instruct-v7.2',
+  [EnumAIModel.QWEN_3]: 'pathumma-thaillm-qwen3-8b-think-3.0.0',
+};

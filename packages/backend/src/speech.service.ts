@@ -26,8 +26,11 @@ export class SpeechService {
         transcript: response?.data?.text,
       };
       return result;
-    } catch (err) {
-      console.error(err.response?.data || err.message);
+    } catch (err: any) {
+      this.logger.error(
+        'Speech to text error',
+        err?.response?.data || err.message,
+      );
       throw new InternalServerErrorException('Speech to text failed');
     }
   }

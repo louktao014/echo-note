@@ -16,7 +16,11 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { SpeechService } from './speech.service';
 import { GeminiService } from './gemini.service';
-import type { ITranscript } from './model/transcript.mode';
+import type {
+  EnumAIAgent,
+  EnumAIModel,
+  ITranscript,
+} from './model/transcript.mode';
 import { TranscriptService } from './transcript.service';
 
 @Controller()
@@ -44,10 +48,20 @@ export class AppController {
   }
 
   @Post('generate-mom')
-  async generateMom(@Body() body: { chunks: string[] }) {
+  async generateMom(
+    @Body()
+    body: {
+      chunks: string[];
+      selectedAI: { agent: EnumAIAgent; model: EnumAIModel };
+    },
+  ) {
     this.logger.log('generate-mom');
     const transcript = body.chunks.join('');
-    const result = await this.geminiService.summarizeMeeting(transcript);
+    const selectedAI = body.selectedAI;
+    const result = await this.geminiService.summarizeMeeting(
+      transcript,
+      selectedAI,
+    );
     return result;
   }
 
@@ -105,7 +119,7 @@ export class AppController {
     } catch (error) {
       this.logger.error(
         `Failed to process audio file: ${file.originalname}`,
-        error.stack,
+        error,
       );
       throw new InternalServerErrorException('Audio processing failed.');
     }

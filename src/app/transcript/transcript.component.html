@@ -1,20 +1,50 @@
 <div class="transcript-container">
-  <h2>Transcript</h2>
+  <div
+    style="
+      display: flex;
+      gap: 10px;
+      flex-direction: row;
+      align-items: end;
+      justify-content: space-between;
+    "
+  >
+    <h2>Transcript</h2>
+    <div style="display: flex; gap: 4px; align-items: flex-end">
+      <select class="agent" name="agent" id="agent" (change)="onModelChanges($event, 'agent')">
+        <option value="thaiLLM">Thai LLM</option>
+        <option value="germini">Germini</option>
+      </select>
+      <select
+        class="model"
+        name="ai_model"
+        id="ai_model"
+        (change)="onModelChanges($event, 'model')"
+      >
+        <option value="QWEN_3">Qwen 3</option>
+        <option value="OPEN_THAI_GPT">Open Thai GPT</option>
+      </select>
+    </div>
+  </div>
 
   @if (isEditing()) {
-  <textarea class="transcript-textarea" [(ngModel)]="editedTranscript"></textarea>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div class="subject-label">Subject:</div>
+      <input type="text" class="subject" [(ngModel)]="editedSubject" />
+      <div class="content-label">Content:</div>
+      <textarea class="transcript-textarea" [(ngModel)]="editedTranscript"></textarea>
+    </div>
   } @else {
-  <div class="transcript-content">
-    <p>{{ editedTranscript() }}</p>
-  </div>
+    <div class="transcript-content">
+      <p>{{ editedTranscript() }}</p>
+    </div>
   }
 
   <div class="actions">
     <div class="btn-edit" (click)="toggleEditSave()">
       @if (isEditing()) {
-      <span>Save</span>
+        <span>Save</span>
       } @else {
-      <span>Edit</span>
+        <span>Edit</span>
       }
     </div>
     <div class="btn-confirm" (click)="proceed('generate')">Confirm & Proceed</div>

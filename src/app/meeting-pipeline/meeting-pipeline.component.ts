@@ -15,6 +15,7 @@ import {
   LoadingDialogComponent,
   LoadingDialogData,
 } from '../loading-dialog/loading-dialog.component';
+import { EnumAIAgent, EnumAIModel, IConfirmTranscriptParams } from '../model/transcript.mode';
 
 @Component({
   selector: 'app-meeting-pipeline',
@@ -108,20 +109,20 @@ export class MeetingPipelineComponent {
     console.log(urlPath);
   }
 
-  onConfirmTranscript(params: { action: string; content: string }) {
+  onConfirmTranscript(params: IConfirmTranscriptParams) {
     this.onLoading(true);
-    const { action, content } = params;
+    const { action, subject, content, selectedAI } = params;
     switch (action) {
       case 'save':
-        this.onSaveTransScript(content);
+        this.onSaveTransScript(subject, content);
         break;
       case 'generate':
-        this.onGenerateMOM(content);
+        this.onGenerateMOM(content, selectedAI);
         break;
     }
   }
 
-  onSaveTransScript(content: string) {
+  onSaveTransScript(subject: string, content: string) {
     const now = new Date().toISOString();
     const currentDate = new Date(now).toLocaleString('en-US', {
       timeZone: 'Asia/Bangkok',
@@ -132,8 +133,8 @@ export class MeetingPipelineComponent {
       minute: '2-digit',
       hour12: false,
     });
-    const subject = `Trascript On : ${currentDate}`;
-    const payload = this.transcriptService.preparingPayloadTranscript(subject, content);
+    const finalSubject = subject || `Trascript On : ${currentDate}`;
+    const payload = this.transcriptService.preparingPayloadTranscript(finalSubject, content);
     this.transcriptService.saveTranscript(payload).subscribe({
       next: () => {
         this.onLoading(false);
@@ -146,10 +147,10 @@ export class MeetingPipelineComponent {
     });
   }
 
-  onGenerateMOM(content: string) {
+  onGenerateMOM(content: string, selectedAI: { agent: EnumAIAgent; model: EnumAIModel }) {
     // this.step.set(EnumStep.GENERATING);
     // const chunks = this.transcriptService.chunk(content);
-    this.meetingService.generateMoM([content]).subscribe({
+    this.meetingService.generateMoM([content], selectedAI).subscribe({
       next: (result: any) => {
         this.onLoading(false);
         console.log('generateMoM', result);

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "run-p start:frontend start:backend",
-    "start:frontend": "ng serve --host 0.0.0.0 --port 4200",
+    "start:frontend": "ng serve --host 0.0.0.0 --port 9999",
     "start:backend": "npm run start:dev --prefix packages/backend",
     "start:original": "ng serve",
     "build": "ng build",
