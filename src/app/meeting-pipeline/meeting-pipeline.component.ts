@@ -36,6 +36,7 @@ export class MeetingPipelineComponent {
 
   transcript = signal('');
   mom = signal<any>(null);
+  aiAgent = signal<EnumAIAgent>(EnumAIAgent.OPEN_ROUTER);
   private audioService = inject(AudioService);
   private transcriptService = inject(TranscriptService);
   private meetingService = inject(MeetingService);
@@ -134,7 +135,11 @@ export class MeetingPipelineComponent {
       hour12: false,
     });
     const finalSubject = subject || `Trascript On : ${currentDate}`;
-    const payload = this.transcriptService.preparingPayloadTranscript(finalSubject, content);
+    const payload = this.transcriptService.preparingPayloadTranscript(
+      EnumAIAgent.MANUAL,
+      finalSubject,
+      content,
+    );
     this.transcriptService.saveTranscript(payload).subscribe({
       next: () => {
         this.onLoading(false);
@@ -142,6 +147,7 @@ export class MeetingPipelineComponent {
       },
       error: (error) => {
         console.warn('error =>', error);
+        this.openDialogError(error?.message || 'Something went wrong while generating MoM');
         this.onLoading(false);
       },
     });
@@ -150,6 +156,7 @@ export class MeetingPipelineComponent {
   onGenerateMOM(content: string, selectedAI: { agent: EnumAIAgent; model: EnumAIModel }) {
     // this.step.set(EnumStep.GENERATING);
     // const chunks = this.transcriptService.chunk(content);
+    this.aiAgent.set(selectedAI.agent);
     this.meetingService.generateMoM([content], selectedAI).subscribe({
       next: (result: any) => {
         this.onLoading(false);
@@ -160,7 +167,19 @@ export class MeetingPipelineComponent {
       },
       error: (error) => {
         this.onLoading(false);
+        this.openDialogError(error?.message || 'Something went wrong while generating MoM');
         console.warn('error', error?.message);
+      },
+    });
+  }
+
+  openDialogError(msg: string) {
+    this.dialog.open(StatusDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Error',
+        message: msg,
+        status: 'error',
       },
     });
   }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HistoryDetailDialogComponent } from '../history-detail-dialog/history-detail-dialog.component';
 import { TranscriptService } from '../services/transcript.service';
-import { ITranscript } from '../model/transcript.mode';
+import { EnumAIAgent, ITranscript } from '../model/transcript.mode';
 import { EMPTY, of, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { StatusDialogComponent } from '../dialog/status-dialog.component';
@@ -24,6 +24,7 @@ export class HistoryComponent implements OnInit {
   private transcriptService = inject(TranscriptService);
   private dialog = inject(MatDialog);
   history = signal<ITranscript[]>([]);
+  private allTranscripts: ITranscript[] = [];
   private loadingDialogRef?: MatDialogRef<LoadingDialogComponent>;
 
   ngOnInit(): void {
@@ -35,6 +36,7 @@ export class HistoryComponent implements OnInit {
     this.transcriptService.getAllTranscript().subscribe({
       next: (result: any) => {
         this.history.set(result.data);
+        this.allTranscripts = result.data;
         this.onLoading(false);
       },
       error: (error) => {
@@ -67,7 +69,7 @@ export class HistoryComponent implements OnInit {
           }
           this.openDialogStatus(statusDialog, item);
           return of(response);
-        })
+        }),
       )
       .subscribe({
         next: (response: any) => {
@@ -119,7 +121,7 @@ export class HistoryComponent implements OnInit {
           this.history.update((items) => items.filter((item) => item.id !== transcriptID));
         }
         return of(response);
-      })
+      }),
     );
   }
 
@@ -129,7 +131,6 @@ export class HistoryComponent implements OnInit {
       content: item.content,
       date: item.created_at,
     };
-    console.log('dialogData', dialogData);
     this.dialog.open(HistoryDetailDialogComponent, {
       width: '1000px',
       maxWidth: 'none',
@@ -141,7 +142,11 @@ export class HistoryComponent implements OnInit {
     this.onLoading(true);
     const subject = 'test';
     const content = 'test';
-    const payload = this.transcriptService.preparingPayloadTranscript(subject, content);
+    const payload = this.transcriptService.preparingPayloadTranscript(
+      EnumAIAgent.MANUAL,
+      subject,
+      content,
+    );
     this.transcriptService.saveTranscript(payload).subscribe({
       next: (result: any) => {
         console.log('result', result);
@@ -152,6 +157,13 @@ export class HistoryComponent implements OnInit {
         this.onLoading(false);
       },
     });
+  }
+
+  onSearch(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.history.update(() =>
+      this.allTranscripts.filter((item) => item.sub_ject.toLowerCase().includes(searchTerm)),
+    );
   }
 
   exportHistory(): void {

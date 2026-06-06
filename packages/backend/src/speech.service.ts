@@ -6,7 +6,7 @@ import {
 import axios, { AxiosResponse } from 'axios';
 import FormData from 'form-data';
 import { AppController } from './app.controller';
-import { MOCK_RES_ELEVEN_LABS } from './mock-data';
+import { MOCK_RES_ELEVEN_LABS } from './mock_data/mock-data';
 
 @Injectable()
 export class SpeechService {

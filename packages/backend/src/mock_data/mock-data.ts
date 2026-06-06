@@ -6,6 +6,62 @@ export const MOCK_RES_GERMINI = {
   mom: '**สรุปรายงานการประชุม**\n\n**1. สรุปเนื้อหาสำคัญ**\n\n*   มีการหารือเกี่ยวกับปัญหาด้านความปลอดภัยที่เคยนำไปสู่การยกเลิกโครงการในอดีต และการจัดสรรงบประมาณเพื่อสนับสนุนการแก้ไขปัญหาดังกล่าว\n*   มีการแนะนำเครื่องมือด้านความปลอดภัยที่ใช้ในปัจจุบันและกำลังจะเปิดตัว ได้แก่ GitHub Copilot และ Checkmark Dev Assist ซึ่งเป็นปลั๊กอินสำหรับ IDE\n*   ประเด็นสำคัญคือแผนการอัปเดต Angular ซึ่งมีการเตือนถึงความเสี่ยงจากการข้ามเวอร์ชันหลักจำนวนมาก (จากเวอร์ชัน 18/19 ไปยังเวอร์ชันที่สูงขึ้น) และความจำเป็นในการบำรุงรักษาไลบรารีและเฟรมเวิร์กอย่างสม่ำเสมอเพื่อหลีกเลี่ยง Technical Debt และช่องโหว่ด้านความปลอดภัย\n*   เน้นย้ำถึงความสำคัญของการรักษาความปลอดภัยของระบบ เนื่องจากมีผลกระทบต่อภาพลักษณ์องค์กรและเกี่ยวข้องกับกฎหมายและข้อบังคับต่างๆ\n*   แจ้งกำหนดการฝึกอบรมการใช้งาน Checkmark Dev Assist ในวันที่ 28 ของเดือน เพื่อช่วยแก้ไขปัญหาด้านความปลอดภัยตั้งแต่ใน IDE\n\n**2. มติที่ประชุม**\n\n*   ไม่มีมติที่ประชุมอย่างเป็นทางการ\n\n**3. สิ่งที่ต้องดำเนินการต่อ (Action Items)**\n\n| งาน                                                                                             | ผู้รับผิดชอบ        | Deadline |\n| :---------------------------------------------------------------------------------------------- | :------------------ | :------- |\n| จัดส่งผู้เชี่ยวชาญเพื่อสอนการใช้งาน Checkmark และช่วยตั้งค่าให้เหมาะสมกับ "my channel"         | ทีมงานผู้เกี่ยวข้อง | (ไม่ระบุ) |\n| จัดทำแผนการอัปเดต Angular และนำเสนอให้คุณกอล์ฟรับทราบ                                          | ทีมพัฒนา            | (ไม่ระบุ) |\n| จัดทำแผนการอัปเดต Angular โดยระบุรายการที่ต้องการละเว้น (ignore) พร้อมเหตุผล และพิจารณาแนวทางแก้ไขชั่วคราว (workaround) | ทีมพัฒนา            | (ไม่ระบุ) |\n| ประชุมภายใน MC เพื่อวางแผนการดำเนินงานต่อไป                                                    | ทีม MC              | (ไม่ระบุ) |\n\n**4. ประเด็นอื่น ๆ**\n\n*   มีการจัดสรรงบประมาณเพื่อสนับสนุนการแก้ไขปัญหาด้านความปลอดภัยในกรณีที่งบประมาณไม่เพียงพอ\n*   ความสำคัญของการบำรุงรักษาไลบรารีและเฟรมเวิร์กอย่างสม่ำเสมอเพื่อหลีกเลี่ยงปัญหา Technical Debt และการอัปเกรดที่ซับซ้อนในอนาคต\n*   การปฏิบัติตามกฎหมายและข้อบังคับที่เกี่ยวข้อง รวมถึงผลกระทบต่อภาพลักษณ์องค์กรหากเกิดปัญหาด้านความปลอดภัย\n*   กำหนดการฝึกอบรมการใช้งาน Checkmark Dev Assist ในวันที่ 28 ของเดือน เพื่อช่วยแก้ไขปัญหาด้านความปลอดภัยตั้งแต่ใน IDE\n*   ผู้พูดเสนอความช่วยเหลือด้านเครื่องมือและทรัพยากรหากจำเป็น',
 };
 
+export const MOCK_RES_NVIDIA_NEMOTRON = {
+  id: 'gen-1778637446-dAmJ6uo0WiG4tDzLt9be',
+  object: 'chat.completion',
+  created: 1778637446,
+  model: 'nvidia/nemotron-3-super-120b-a12b-20230311:free',
+  provider: 'Nvidia',
+  system_fingerprint: null,
+  choices: [
+    {
+      index: 0,
+      logprobs: null,
+      finish_reason: 'stop',
+      native_finish_reason: 'stop',
+      message: {
+        role: 'assistant',
+        content:
+          "Hey! 👋 My name is **Nemotron 3 Super**, and I'm a large language model created by NVIDIA. How can I help you today? 😊",
+        refusal: null,
+        reasoning:
+          'Okay, the user asked "Hi whar your name" – that\'s clearly a typo for "what\'s your name." They\'re probably typing quickly or on mobile, so I should keep it friendly and not point out the error. \n\nHmm, they seem casual and maybe a bit rushed – just a simple greeting test. No frustration in the tone, just wanting a basic response. \n\nSince they didn\'t specify formality, I\'ll match their casual vibe with "Hey!" instead of "Hello." Gotta clarify I\'m an AI upfront though – wouldn\'t want to mislead them into thinking I\'m human. \n\n...Wait, should I add emojis? Yeah, a smiley feels right for this low-stakes interaction. Keeps it warm without overdoing it. \n\n*Double-checking*: No need to over-explain – just name, role, and open-ended offer to help. They can ask more if they want.\n\n',
+        reasoning_details: [
+          {
+            type: 'reasoning.text',
+            text: 'Okay, the user asked "Hi whar your name" – that\'s clearly a typo for "what\'s your name." They\'re probably typing quickly or on mobile, so I should keep it friendly and not point out the error. \n\nHmm, they seem casual and maybe a bit rushed – just a simple greeting test. No frustration in the tone, just wanting a basic response. \n\nSince they didn\'t specify formality, I\'ll match their casual vibe with "Hey!" instead of "Hello." Gotta clarify I\'m an AI upfront though – wouldn\'t want to mislead them into thinking I\'m human. \n\n...Wait, should I add emojis? Yeah, a smiley feels right for this low-stakes interaction. Keeps it warm without overdoing it. \n\n*Double-checking*: No need to over-explain – just name, role, and open-ended offer to help. They can ask more if they want.\n\n',
+            format: 'unknown',
+            index: 0,
+          },
+        ],
+      },
+    },
+  ],
+  usage: {
+    prompt_tokens: 21,
+    completion_tokens: 240,
+    total_tokens: 261,
+    cost: 0,
+    is_byok: false,
+    prompt_tokens_details: {
+      cached_tokens: 0,
+      cache_write_tokens: 0,
+      audio_tokens: 0,
+      video_tokens: 0,
+    },
+    cost_details: {
+      upstream_inference_cost: 0,
+      upstream_inference_prompt_cost: 0,
+      upstream_inference_completions_cost: 0,
+    },
+    completion_tokens_details: {
+      reasoning_tokens: 206,
+      image_tokens: 0,
+      audio_tokens: 0,
+    },
+  },
+};
+
 export const _prompt = (transcript: string) => {
   return `
           คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
@@ -22,6 +78,27 @@ export const _prompt = (transcript: string) => {
           หมายเหตุ:
           - หากช่วงใดของบทสนทนาไม่ชัดเจน ให้ระบุว่า [เสียงไม่ชัดเจน]
           - ใช้ภาษาไทยทางการ กระชับ และชัดเจน
+  
+          บทถอดเสียง:
+          """
+          ${transcript}
+          """
+        `;
+};
+
+export const _prompt_summary = (transcript: string) => {
+  return `
+          คุณคือผู้ช่วยสรุปรายงานการประชุม (Minutes of Meeting)
+
+          กรุณาสรุปเนื้อหาจากข้อความด้านล่าง
+          โดยจัดรูปแบบดังนี้:
+  
+          - สรุปเนื้อหาสำคัญ
+          - สิ่งที่ต้องดำเนินการต่อ (Action Items)
+          - ประเด็นอื่น ๆ (ถ้ามี)
+  
+          หมายเหตุ:
+          - ใช้ภาษาไทย กระชับ และชัดเจน เข้าใจง่าย ไม่แก้คำทางเทคนิคที่อาจจะมีในบทความ
   
           บทถอดเสียง:
           """

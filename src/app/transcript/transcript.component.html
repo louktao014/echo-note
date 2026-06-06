@@ -11,8 +11,9 @@
     <h2>Transcript</h2>
     <div style="display: flex; gap: 4px; align-items: flex-end">
       <select class="agent" name="agent" id="agent" (change)="onModelChanges($event, 'agent')">
-        <option value="thaiLLM">Thai LLM</option>
-        <option value="germini">Germini</option>
+        @for (agent of aiAgentOptions; track $index) {
+          <option value="{{ agent.value }}">{{ agent.value }}</option>
+        }
       </select>
       <select
         class="model"

@@ -8,6 +8,13 @@
   </div>
   <div
     class="btn-transcript"
+    (click)="step.set(EnumStep.DONE)"
+    [ngClass]="{ 'btn-active': step() === EnumStep.DONE }"
+  >
+    MOM RESULT
+  </div>
+  <div
+    class="btn-transcript"
     (click)="step.set(EnumStep.TRANSCRIPT)"
     [ngClass]="{ 'btn-active': step() === EnumStep.TRANSCRIPT }"
   >
@@ -21,31 +28,42 @@
     UPLOAD
   </div>
 </div>
-@switch (step()) { @case (EnumStep.UPLOAD) {
-<app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-} @case (EnumStep.TRANSCRIBE) {
-<p>Generate Speech To Text...</p>
-} @case (EnumStep.TRANSCRIPT) {
-<app-transcript [transcript]="transcript()" (confirm)="onConfirmTranscript($event)">
-</app-transcript>
-} @case (EnumStep.GENERATING) {
-<p>Generate Munites Of Meeting...</p>
-} @case (EnumStep.DONE) {
-<app-mom-result [mom]="mom()" (setStep)="step.set($event)"> </app-mom-result>
-} @case (EnumStep.FINISH) {
-<p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
-} @case(EnumStep.HISTORY){
-<app-history></app-history>
-} @case ('ALL') {
-<app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
-<p>Generate Speech To Text...</p>
-<app-transcript
-  [transcript]="transcript()"
-  (confirm)="onConfirmTranscript($event)"
-></app-transcript>
-<p>Generate Munites Of Meeting...</p>
-<app-mom-result [mom]="mom()"> </app-mom-result>
-<p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
-} @default {
-<p>Unknown step</p>
-} }
+@switch (step()) {
+  @case (EnumStep.UPLOAD) {
+    <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
+  }
+  @case (EnumStep.TRANSCRIBE) {
+    <p>Generate Speech To Text...</p>
+  }
+  @case (EnumStep.TRANSCRIPT) {
+    <app-transcript [transcript]="transcript()" (confirm)="onConfirmTranscript($event)">
+    </app-transcript>
+  }
+  @case (EnumStep.GENERATING) {
+    <p>Generate Munites Of Meeting...</p>
+  }
+  @case (EnumStep.DONE) {
+    <app-mom-result [mom]="mom()" (setStep)="step.set($event)" [aiAgent]="aiAgent()">
+    </app-mom-result>
+  }
+  @case (EnumStep.FINISH) {
+    <p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
+  }
+  @case (EnumStep.HISTORY) {
+    <app-history></app-history>
+  }
+  @case ('ALL') {
+    <app-upload-audio (audioUploaded)="onUpload($event)"> </app-upload-audio>
+    <p>Generate Speech To Text...</p>
+    <app-transcript
+      [transcript]="transcript()"
+      (confirm)="onConfirmTranscript($event)"
+    ></app-transcript>
+    <p>Generate Munites Of Meeting...</p>
+    <app-mom-result [mom]="mom()"> </app-mom-result>
+    <p (click)="step.set(EnumStep.UPLOAD)" style="cursor: pointer">FINISH.</p>
+  }
+  @default {
+    <p>Unknown step</p>
+  }
+}

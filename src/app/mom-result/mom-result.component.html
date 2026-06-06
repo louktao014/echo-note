@@ -2,9 +2,13 @@
   <div class="notion-page">
     <div class="page-content">
       <h1 class="page-title" contenteditable="true" spellcheck="false">Minutes of Meeting</h1>
-      <div class="page-body" contenteditable="true" spellcheck="false">
-        {{ mom() }}
-      </div>
+      <div
+        class="page-body"
+        [attr.contenteditable]="isEdit()"
+        spellcheck="false"
+        [innerText]="mom()"
+        (input)="onChangeMoM($event)"
+      ></div>
     </div>
   </div>
   <div class="btn-container">
@@ -18,6 +22,11 @@
       />
     </div>
     <div class="btn-copy" (click)="onCopyToClipboard()">COPY</div>
-    <div class="btn-copy" (click)="onSave(subjectInput.value || '')">SAVE</div>
+    <div class="btn-copy" (click)="onEdit('edit')">Edit</div>
+    @if (isEdit()) {
+      <div class="btn-copy" (click)="onEdit('save')">Save</div>
+    } @else {
+      <div class="btn-copy" (click)="onSave(subjectInput.value || '')">Save Transcript</div>
+    }
   </div>
 </div>

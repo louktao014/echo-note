@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   EventEmitter,
   inject,
   input,
   Output,
   signal,
 } from '@angular/core';
-import { ITranscript } from '../model/transcript.mode';
+import { EnumAIAgent, ITranscript } from '../model/transcript.mode';
 import { TranscriptService } from '../services/transcript.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -33,7 +34,15 @@ export class MomResultComponent {
 
   momContent = signal<string>('');
   mom = input('');
+  aiAgent = input<EnumAIAgent>(EnumAIAgent.OPEN_ROUTER);
+  isEdit = signal<boolean>(false);
   @Output() setStep = new EventEmitter<EnumStep>();
+
+  constructor() {
+    effect(() => {
+      this.momContent.set(this.mom());
+    });
+  }
 
   onSave(subJectValue: string) {
     if (subJectValue) {
@@ -46,11 +55,15 @@ export class MomResultComponent {
           switchMap((isConfirm: boolean) => {
             if (isConfirm) {
               this.onLoading(true);
-              const payload = this.transcriptService.preparingPayloadTranscript(subJectValue, this.mom());
+              const payload = this.transcriptService.preparingPayloadTranscript(
+                this.aiAgent(),
+                subJectValue,
+                this.momContent(),
+              );
               return this.transcriptService.saveTranscript(payload);
             }
             return EMPTY;
-          })
+          }),
         )
         .subscribe({
           next: () => {
@@ -65,6 +78,19 @@ export class MomResultComponent {
     } else {
       this.openStatusDialog(false, 'Please, enter subject name');
     }
+  }
+
+  onEdit(action: string) {
+    if (action === 'edit') {
+      this.isEdit.set(true);
+    } else {
+      this.isEdit.set(false);
+    }
+  }
+
+  onChangeMoM(event: Event) {
+    const value = (event.target as HTMLElement).innerText;
+    this.momContent.set(value);
   }
 
   onLoading(isLoading: boolean) {
@@ -117,9 +143,7 @@ export class MomResultComponent {
       });
   }
 
-
-
   onCopyToClipboard() {
-    navigator.clipboard.writeText(this.mom());
+    navigator.clipboard.writeText(this.momContent());
   }
 }

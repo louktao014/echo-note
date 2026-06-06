@@ -15,12 +15,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { SpeechService } from './speech.service';
-import { GeminiService } from './gemini.service';
+import { AiAgentService } from './ai-agent.service';
 import type {
   EnumAIAgent,
   EnumAIModel,
   ITranscript,
-} from './model/transcript.mode';
+} from './model/transcript.model';
 import { TranscriptService } from './transcript.service';
 
 @Controller()
@@ -30,7 +30,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private speechService: SpeechService,
-    private geminiService: GeminiService,
+    private aiAgentService: AiAgentService,
     private transcriptService: TranscriptService,
   ) {}
 
@@ -58,7 +58,7 @@ export class AppController {
     this.logger.log('generate-mom');
     const transcript = body.chunks.join('');
     const selectedAI = body.selectedAI;
-    const result = await this.geminiService.summarizeMeeting(
+    const result = await this.aiAgentService.summarizeMeeting(
       transcript,
       selectedAI,
     );
@@ -78,13 +78,16 @@ export class AppController {
     this.logger.log('get-transcript');
     return this.transcriptService.getTranscripts();
   }
+
   @Delete('delete-transcript/:id')
   async deleteTranscript(@Param('id') id: string) {
     this.logger.log('delete-transcript');
     return this.transcriptService.deleteTranscript(id);
   }
 
-  /** Upload Audio File for Split video 10 sec and transcribe.*/
+  /**
+   * Upload Audio File for Split video 10 sec and transcribe.
+   */
   @Post('upload-audio')
   @UseInterceptors(
     FileInterceptor('audio', {

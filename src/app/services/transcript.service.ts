@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ITranscript } from '../model/transcript.mode';
+import { EnumAIAgent, ITranscript } from '../model/transcript.mode';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
@@ -33,12 +33,13 @@ export class TranscriptService {
     return chunks;
   }
 
-  preparingPayloadTranscript(subJect: string, transcript: string) {
+  preparingPayloadTranscript(aiAgent: EnumAIAgent, subJect: string, transcript: string) {
     const now = new Date().toISOString();
     const payload: ITranscript = {
       user_id: '0',
-      sub_ject: subJect,
+      sub_ject: `[${aiAgent}]-${subJect}`,
       content: transcript,
+      aiAgent,
       created_at: new Date(now).toLocaleString('th-TH', {
         timeZone: 'Asia/Bangkok',
       }),

@@ -3,6 +3,7 @@ export interface ITranscript {
   user_id: string;
   sub_ject: string;
   content: string;
+  aiAgent: EnumAIAgent;
   created_at: string;
   updated_at: string;
 }
@@ -18,11 +19,13 @@ export interface IConfirmTranscriptParams {
 }
 
 export enum EnumAIAgent {
-  ThaiLLM = 'thaiLLM',
-  Germini = 'germini',
+  THAI_LLM = 'ThaiLLM',
+  GERMINI = 'Germini',
+  OPEN_ROUTER = 'OpenRouter',
+  MANUAL = 'Manual',
 }
 
 export enum EnumAIModel {
-  OPEN_THAI_GPT = 'OPEN_THAI_GPT',
-  QWEN_3 = 'QWEN_3',
+  OPEN_THAI_GPT = 'OpenThaiGPT',
+  QWEN_3 = 'Qwen3',
 }

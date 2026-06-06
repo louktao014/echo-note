@@ -7,8 +7,9 @@ export interface ITranscript {
 }
 
 export enum EnumAIAgent {
-  ThaiLLM = 'thaiLLM',
-  Germini = 'germini',
+  THAI_LLM = 'ThaiLLM',
+  GERMINI = 'Germini',
+  OPEN_ROUTER = 'OpenRouter',
 }
 
 export enum EnumAIModel {

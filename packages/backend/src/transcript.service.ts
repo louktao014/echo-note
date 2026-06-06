@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from './supabse/supabase.service';
-import { ITranscript } from './model/transcript.mode';
+import { ITranscript } from './model/transcript.model';
 
 @Injectable()
 export class TranscriptService {

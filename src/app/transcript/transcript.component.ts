@@ -28,13 +28,35 @@ export class TranscriptComponent {
   isEditing = signal<boolean>(false);
   editedTranscript = signal<string>('');
   editedSubject = signal<string>('');
-  selectedAIAgent = signal<EnumAIAgent>(EnumAIAgent.ThaiLLM);
+  selectedAIAgent = signal<EnumAIAgent>(EnumAIAgent.OPEN_ROUTER);
   selectedAIModel = signal<EnumAIModel>(EnumAIModel.QWEN_3);
+  aiAgentOptions: { priority: number; value: EnumAIAgent }[] = [];
+  aiModelOptions = Object.values(EnumAIModel);
 
   constructor() {
+    this.initializeAiAgentOptions();
     effect(() => {
       this.editedTranscript.set(this.transcript());
     });
+  }
+
+  initializeAiAgentOptions() {
+    const handle = (agent: EnumAIAgent): { priority: number; value: EnumAIAgent } => {
+      switch (agent) {
+        case EnumAIAgent.OPEN_ROUTER:
+          return { priority: 1, value: EnumAIAgent.OPEN_ROUTER };
+        case EnumAIAgent.THAI_LLM:
+          return { priority: 2, value: EnumAIAgent.THAI_LLM };
+        case EnumAIAgent.GERMINI:
+          return { priority: 3, value: EnumAIAgent.GERMINI };
+        default:
+          return { priority: 99, value: agent };
+      }
+    };
+    this.aiAgentOptions = Object.values(EnumAIAgent)
+      .filter((agent) => agent !== EnumAIAgent.MANUAL)
+      .map((agent) => handle(agent))
+      .sort((a, b) => (a?.priority || 0) - (b?.priority || 0));
   }
 
   toggleEditSave() {

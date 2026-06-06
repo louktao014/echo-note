@@ -1,17 +1,28 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } from '@google/generative-ai';
-import { _prompt, MOCK_RES_GERMINI } from './mock-data';
+import {
+  _prompt,
+  _prompt_summary,
+  MOCK_RES_GERMINI,
+} from './mock_data/mock-data';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { AI_MODEL, EnumAIAgent, EnumAIModel } from './model/transcript.mode';
+import { AI_MODEL, EnumAIAgent, EnumAIModel } from './model/transcript.model';
 
 @Injectable()
-export class GeminiService {
-  private readonly logger = new Logger(GeminiService.name);
+export class AiAgentService {
+  private readonly logger = new Logger(AiAgentService.name);
   private genAI: GoogleGenerativeAI;
 
   private readonly generationConfig = {
@@ -54,29 +65,39 @@ export class GeminiService {
   ): Promise<{ mom: string }> {
     try {
       const isTest = false;
-      const isUserThaiLLM = selectedAI.agent === EnumAIAgent.ThaiLLM;
       if (isTest) {
         return MOCK_RES_GERMINI;
       } else {
-        this.logger.log(
-          `Summarizing meeting transcript with >> { agent: ${selectedAI.agent} , model: ${selectedAI.model} }`,
-        );
-        if (isUserThaiLLM) {
-          return this.thaiLLM(transcript, selectedAI.model);
-        } else {
-          return this.germini(transcript);
-        }
+        return this.getAgent(selectedAI, transcript);
       }
     } catch (error: any) {
       this.logger.error('Gemini summarize error', error);
       throw new Error(`Gemini API Error: ${error.message}`);
     }
   }
+  getAgent(
+    selectedAI: { agent: EnumAIAgent; model: EnumAIModel },
+    transcript: string,
+  ): Promise<{ mom: string }> {
+    this.logger.log(
+      `Summarizing meeting transcript with >> { agent: ${selectedAI.agent} , model: ${selectedAI.model} }`,
+    );
+    switch (selectedAI.agent) {
+      case EnumAIAgent.THAI_LLM:
+        return this.thaiLLM(transcript, selectedAI.model);
+      case EnumAIAgent.OPEN_ROUTER:
+        return this.openRouter(transcript);
+      case EnumAIAgent.GERMINI:
+        return this.germini(transcript);
+      default:
+        throw new Error(`Unknown agent: ${selectedAI.agent}`);
+    }
+  }
 
   async thaiLLM(
     transcript: string,
     modelSelected: EnumAIModel = EnumAIModel.QWEN_3,
-  ) {
+  ): Promise<{ mom: string }> {
     /**
      * @this New (OpenAI-compatible) — recommended
      * @constant {const url = 'http://thaillm.or.th/api/v1/chat/completions'}
@@ -85,7 +106,6 @@ export class GeminiService {
      */
     const url = 'http://thaillm.or.th/api/v1/chat/completions';
     const model = AI_MODEL[modelSelected];
-    console.info('\x1b[7;31;40m[DEBUGGER] ->> model\x1b[0m', model);
     // throw new Error(`Invalid model selected: ${modelSelected}`);
     if (!model) {
       throw new Error(`Invalid model selected: ${modelSelected}`);
@@ -113,6 +133,30 @@ export class GeminiService {
     }
   }
 
+  async openRouter(transcript: string): Promise<{ mom: string }> {
+    const baseURL = 'https://openrouter.ai/api/v1/chat/completions';
+    const model = 'nvidia/nemotron-3-super-120b-a12b:free';
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    };
+    const prompt = _prompt_summary(transcript);
+    const payload = {
+      model: model,
+      messages: [{ role: 'user', content: prompt }],
+      reasoning: { enabled: true },
+    };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(baseURL, payload, { headers }),
+      );
+      return { mom: response.data.choices[0].message.content };
+    } catch (error: any) {
+      this.logger.error('OpenRouter API Error:', error.message);
+      throw this.handleError(error);
+    }
+  }
+
   async germini(transcript: string) {
     const model = this.genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
@@ -132,5 +176,25 @@ export class GeminiService {
     });
     this.logger.log('result', result.response.text());
     return { mom: result.response.text() };
+  }
+
+  handleError(error: any) {
+    const status = error.response?.status;
+    switch (status) {
+      case 401:
+        throw new UnauthorizedException(
+          'OpenRouter API Error: Invalid API key',
+        );
+      case 404:
+        throw new NotFoundException('OpenRouter API Error: Model not found');
+      case 429:
+        throw new BadRequestException(
+          'OpenRouter API Error: Rate limit exceeded',
+        );
+      default:
+        throw new InternalServerErrorException(
+          error.response?.data || error.message,
+        );
+    }
   }
 }
