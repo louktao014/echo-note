@@ -2,14 +2,14 @@
   "name": "echonote",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "ng": "cd packages/frontend && ng",
     "start": "run-p start:frontend start:backend",
-    "start:frontend": "ng serve --host 0.0.0.0 --port 9999",
+    "start:frontend": "cd packages/frontend && ng serve --host 0.0.0.0 --port 9999",
     "start:backend": "npm run start:dev --prefix packages/backend",
-    "start:original": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start:original": "cd packages/frontend && ng serve",
+    "build": "cd packages/frontend && ng build",
+    "watch": "cd packages/frontend && ng build --watch --configuration development",
+    "test": "cd packages/frontend && ng test"
   },
   "prettier": {
     "printWidth": 100,
